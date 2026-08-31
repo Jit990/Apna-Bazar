@@ -1,0 +1,31 @@
+{
+    "name": "Apna Bazar",
+    "short_name": "Apna Bazar",
+    "description": "Apna Bazar – Your trusted local shop in Bajkul, West Bengal. Shop jewelry, cosmetics, beauty, gifts, stationery, toys & more.",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#FAFAFA",
+    "theme_color": "#C41E3A",
+    "icons": [
+        {
+            "src": "/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable any"
+        }
+    ],
+    "categories": [
+        "shopping",
+        "lifestyle"
+    ],
+    "lang": "en-IN",
+    "dir": "ltr",
+    "scope": "/"
+}

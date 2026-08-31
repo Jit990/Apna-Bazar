@@ -1,0 +1,396 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Baloo+2:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   APNA BAZAR Design System – CSS Variables
+   ============================================================ */
+:root {
+  /* Brand Colors - matching banner: Red/Crimson primary, Orange accent */
+  --color-primary:        #C41E3A;   /* Crimson red (from banner) */
+  --color-primary-dark:   #9B1530;
+  --color-primary-light:  #E8354F;
+  --color-secondary:      #E87D2B;   /* Orange gold */
+  --color-secondary-dark: #C5621A;
+  --color-accent:         #FFD700;   /* Gold accent */
+
+  /* Neutral */
+  --color-bg:             #FAFAFA;
+  --color-bg-muted:       #F5F5F5;
+  --color-border:         #E5E7EB;
+  --color-border-muted:   #F3F4F6;
+  --color-text:           #111827;
+  --color-text-muted:     #6B7280;
+  --color-text-light:     #9CA3AF;
+
+  /* Status */
+  --color-success:        #16A34A;
+  --color-warning:        #D97706;
+  --color-error:          #DC2626;
+  --color-info:           #2563EB;
+
+  /* Shadows */
+  --shadow-sm:     0 1px 2px rgba(0,0,0,.05);
+  --shadow:        0 1px 3px rgba(0,0,0,.10), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:     0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg:     0 10px 15px rgba(0,0,0,.10), 0 4px 6px rgba(0,0,0,.05);
+  --shadow-xl:     0 20px 25px rgba(0,0,0,.10), 0 10px 10px rgba(0,0,0,.04);
+
+  /* Radius */
+  --radius-sm:  6px;
+  --radius:     10px;
+  --radius-md:  14px;
+  --radius-lg:  20px;
+  --radius-xl:  28px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-brand: 'Baloo 2', 'Inter', sans-serif;
+
+  /* Transitions */
+  --transition-fast:   0.15s ease;
+  --transition:        0.25s ease;
+  --transition-slow:   0.4s ease;
+}
+
+/* ============================================================
+   Base Reset & Global Styles
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   Tailwind Layer Overrides
+   ============================================================ */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-brand);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color-text);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+  }
+
+  input, textarea, select {
+    font-family: inherit;
+  }
+}
+
+@layer components {
+  /* ---- Buttons ---- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none;
+  }
+
+  .btn-primary {
+    @apply btn bg-[#C41E3A] text-white hover:bg-[#9B1530] active:scale-95 focus-visible:ring-[#C41E3A] shadow-sm hover:shadow-md;
+  }
+
+  .btn-secondary {
+    @apply btn bg-[#E87D2B] text-white hover:bg-[#C5621A] active:scale-95 focus-visible:ring-[#E87D2B] shadow-sm hover:shadow-md;
+  }
+
+  .btn-outline {
+    @apply btn border-2 border-[#C41E3A] text-[#C41E3A] hover:bg-[#C41E3A] hover:text-white active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply btn hover:bg-gray-100 text-gray-700;
+  }
+
+  .btn-sm {
+    @apply px-3 py-2 text-xs rounded-lg;
+  }
+
+  .btn-lg {
+    @apply px-7 py-4 text-base rounded-2xl;
+  }
+
+  .btn-icon {
+    @apply btn p-2.5 rounded-xl;
+  }
+
+  /* ---- Cards ---- */
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden;
+  }
+
+  .card-hover {
+    @apply card transition-all duration-200 hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  /* ---- Product Card ---- */
+  .product-card {
+    @apply card-hover relative flex flex-col;
+  }
+
+  .product-card-image {
+    @apply relative aspect-square overflow-hidden bg-gray-50;
+  }
+
+  .product-card-body {
+    @apply flex flex-col flex-1 p-3 gap-1;
+  }
+
+  /* ---- Badge ---- */
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold;
+  }
+
+  .badge-success {
+    @apply badge bg-green-100 text-green-700;
+  }
+
+  .badge-warning {
+    @apply badge bg-orange-100 text-orange-700;
+  }
+
+  .badge-error {
+    @apply badge bg-red-100 text-red-700;
+  }
+
+  .badge-info {
+    @apply badge bg-blue-100 text-blue-700;
+  }
+
+  .badge-discount {
+    @apply badge bg-[#C41E3A] text-white;
+  }
+
+  /* ---- Input ---- */
+  .input {
+    @apply w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#C41E3A] focus:border-transparent transition-all duration-200;
+  }
+
+  .input-error {
+    @apply border-red-400 focus:ring-red-400;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-gray-700 mb-1.5;
+  }
+
+  /* ---- Section ---- */
+  .section {
+    @apply py-8 px-4;
+  }
+
+  .section-title {
+    @apply text-xl font-bold text-gray-900 mb-4 flex items-center gap-2;
+    font-family: var(--font-brand);
+  }
+
+  /* ---- Container ---- */
+  .container-app {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ---- Price Display ---- */
+  .price {
+    @apply font-bold text-gray-900;
+    font-family: var(--font-brand);
+  }
+
+  .price-mrp {
+    @apply text-xs text-gray-400 line-through;
+  }
+
+  .price-discount {
+    @apply text-xs font-semibold text-green-600;
+  }
+
+  /* ---- Brand gradient ---- */
+  .brand-gradient {
+    background: linear-gradient(135deg, #C41E3A 0%, #E87D2B 100%);
+  }
+
+  .brand-text-gradient {
+    background: linear-gradient(135deg, #C41E3A 0%, #E87D2B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ---- Skeleton Loader ---- */
+  .skeleton {
+    @apply animate-pulse bg-gray-200 rounded-lg;
+  }
+
+  /* ---- Divider ---- */
+  .divider {
+    @apply border-t border-gray-100 my-4;
+  }
+
+  /* ---- No-data state ---- */
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-16 px-6 text-center;
+  }
+
+  .empty-state-icon {
+    @apply text-6xl mb-4;
+  }
+
+  .empty-state-title {
+    @apply text-lg font-semibold text-gray-700 mb-2;
+  }
+
+  .empty-state-desc {
+    @apply text-sm text-gray-500;
+  }
+
+  /* ---- Mobile bottom nav ---- */
+  .mobile-nav {
+    @apply fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 safe-bottom;
+  }
+
+  .mobile-nav-item {
+    @apply flex flex-col items-center gap-0.5 py-2 px-4 text-xs font-medium text-gray-500 hover:text-[#C41E3A] transition-colors duration-200;
+  }
+
+  .mobile-nav-item.active {
+    @apply text-[#C41E3A];
+  }
+
+  /* ---- Admin sidebar ---- */
+  .admin-sidebar {
+    @apply fixed top-0 left-0 h-full w-64 bg-gray-900 z-40 flex flex-col;
+  }
+
+  .admin-sidebar-link {
+    @apply flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-300 rounded-xl mx-2 hover:bg-gray-800 hover:text-white transition-all duration-200;
+  }
+
+  .admin-sidebar-link.active {
+    @apply bg-[#C41E3A] text-white;
+  }
+
+  /* ---- Add to cart button (inline product card) ---- */
+  .add-btn {
+    @apply h-8 w-8 rounded-full flex items-center justify-center bg-[#C41E3A] text-white font-bold text-lg transition-all duration-200 hover:bg-[#9B1530] active:scale-90 shadow-sm;
+  }
+
+  .qty-selector {
+    @apply flex items-center gap-1 bg-[#C41E3A] text-white rounded-full px-1 py-0.5;
+  }
+
+  .qty-btn {
+    @apply h-6 w-6 rounded-full flex items-center justify-center hover:bg-[#9B1530] transition-colors font-bold text-sm;
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 9999px; }
+}
+
+/* ============================================================
+   Animation Keyframes
+   ============================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.animate-fade-in  { animation: fadeIn  0.3s ease forwards; }
+.animate-slide-up { animation: slideUp 0.4s ease forwards; }
+
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ============================================================
+   Responsive Mobile-first Adjustments
+   ============================================================ */
+
+/* Add bottom padding to main content to account for mobile nav */
+.has-bottom-nav {
+  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Focus visible outline - accessibility */
+:focus-visible {
+  outline: 2px solid #C41E3A;
+  outline-offset: 2px;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(196, 30, 58, 0.15);
+  color: #C41E3A;
+}
+
+/* Print styles */
+@media print {
+  .no-print { display: none !important; }
+}
