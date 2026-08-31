@@ -521,3 +521,18 @@ body {
     display: none !important;
   }
 }
+
+@media (min-width: 1024px) {
+  .mobile-nav {
+    display: none !important;
+  }
+
+  .has-bottom-nav {
+    padding-bottom: 0 !important;
+  }
+
+  .desktop-container {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+}
