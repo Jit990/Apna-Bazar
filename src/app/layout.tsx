@@ -60,8 +60,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${baloo2.variable}`}>
-      <body className="font-sans bg-gray-50 text-gray-900 antialiased">
+    <html lang="en" className={`${inter.variable} ${baloo2.variable} bg-gray-100 sm:bg-gray-200`}>
+      <body className="font-sans bg-gray-50 text-gray-900 antialiased mx-auto max-w-md min-h-[100dvh] relative shadow-2xl sm:my-8 sm:rounded-[2.5rem] sm:border-[8px] sm:border-gray-900 sm:overflow-hidden overflow-x-hidden flex flex-col">
         {children}
         <Toaster
           position="top-center"
