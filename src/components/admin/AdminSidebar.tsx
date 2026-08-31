@@ -6,7 +6,7 @@ import {
     LayoutDashboard, ShoppingBag, Package, Grid3X3,
     Users, Tag, Image, Truck, CreditCard, BarChart3,
     Bell, Settings, LogOut, Menu, X, Box,
-    Shield, ChevronDown,
+    Shield,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -53,7 +53,7 @@ export function AdminSidebar({ userRole = 'admin', userName }: AdminSidebarProps
         }
     };
 
-    const SidebarContent = () => (
+    const renderSidebarContent = () => (
         <div className="flex flex-col h-full">
             {/* Logo */}
             <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-800">
@@ -115,7 +115,7 @@ export function AdminSidebar({ userRole = 'admin', userName }: AdminSidebarProps
         <>
             {/* Desktop sidebar */}
             <aside className="admin-sidebar hidden lg:flex flex-col border-r border-gray-800">
-                <SidebarContent />
+                {renderSidebarContent()}
             </aside>
 
             {/* Mobile hamburger */}
@@ -142,7 +142,7 @@ export function AdminSidebar({ userRole = 'admin', userName }: AdminSidebarProps
                     mobileOpen ? 'translate-x-0' : '-translate-x-full'
                 )}
             >
-                <SidebarContent />
+                {renderSidebarContent()}
             </aside>
         </>
     );

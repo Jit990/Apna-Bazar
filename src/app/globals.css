@@ -6,14 +6,14 @@
    APNA BAZAR Design System – CSS Variables
    ============================================================ */
 :root {
-  /* Brand Colors - matching banner: Red/Crimson primary, Orange accent */
-  --color-primary: #C41E3A;
-  /* Crimson red (from banner) */
-  --color-primary-dark: #9B1530;
-  --color-primary-light: #E8354F;
-  --color-secondary: #E87D2B;
-  /* Orange gold */
-  --color-secondary-dark: #C5621A;
+  /* Brand Colors - Deep Forest Green primary, Orange secondary */
+  --color-primary: #1A7850;
+  /* Deep Forest Green */
+  --color-primary-dark: #145F3E;
+  --color-primary-light: #22A06B;
+  --color-secondary: #F07629;
+  /* Vibrant Orange */
+  --color-secondary-dark: #C25D1A;
   --color-accent: #FFD700;
   /* Gold accent */
 
@@ -133,15 +133,34 @@ body {
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none bg-[#C41E3A] text-white hover:bg-[#9B1530] active:scale-95 focus-visible:ring-[#C41E3A] shadow-sm hover:shadow-md;
+    background-color: var(--color-primary);
+    color: white;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-95 shadow-sm hover:shadow-md;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-primary-dark);
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none bg-[#E87D2B] text-white hover:bg-[#C5621A] active:scale-95 focus-visible:ring-[#E87D2B] shadow-sm hover:shadow-md;
+    background-color: var(--color-secondary);
+    color: white;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-95 shadow-sm hover:shadow-md;
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--color-secondary-dark);
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none border-2 border-[#C41E3A] text-[#C41E3A] hover:bg-[#C41E3A] hover:text-white active:scale-95;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none border-2 active:scale-95;
+  }
+
+  .btn-outline:hover {
+    background-color: var(--color-primary);
+    color: white;
   }
 
   .btn-ghost {
@@ -204,12 +223,19 @@ body {
   }
 
   .badge-discount {
-    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-[#C41E3A] text-white;
+    background-color: var(--color-secondary);
+    color: white;
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold;
   }
 
   /* ---- Input ---- */
   .input {
-    @apply w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#C41E3A] focus:border-transparent transition-all duration-200;
+    @apply w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-transparent transition-all duration-200;
+    outline-color: var(--color-primary);
+  }
+
+  .input:focus {
+    box-shadow: 0 0 0 2px var(--color-primary);
   }
 
   .input-error {
@@ -251,14 +277,27 @@ body {
 
   /* ---- Brand gradient ---- */
   .brand-gradient {
-    background: linear-gradient(135deg, #C41E3A 0%, #E87D2B 100%);
+    background: linear-gradient(135deg, #1A7850 0%, #22A06B 50%, #F07629 100%);
   }
 
   .brand-text-gradient {
-    background: linear-gradient(135deg, #C41E3A 0%, #E87D2B 100%);
+    background: linear-gradient(135deg, #1A7850 0%, #F07629 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* ---- Primary color utilities ---- */
+  .text-primary {
+    color: var(--color-primary);
+  }
+
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+
+  .border-primary {
+    border-color: var(--color-primary);
   }
 
   /* ---- Skeleton Loader ---- */
@@ -300,11 +339,15 @@ body {
   }
 
   .mobile-nav-item {
-    @apply flex flex-col items-center gap-0.5 py-3 px-4 text-xs font-medium text-gray-400 hover:text-[#C41E3A] transition-colors duration-200;
+    @apply flex flex-col items-center gap-0.5 py-3 px-4 text-xs font-medium text-gray-400 transition-colors duration-200;
+  }
+
+  .mobile-nav-item:hover {
+    color: var(--color-primary);
   }
 
   .mobile-nav-item.active {
-    @apply text-[#C41E3A];
+    color: var(--color-primary);
   }
 
   /* ---- Admin sidebar ---- */
@@ -317,20 +360,33 @@ body {
   }
 
   .admin-sidebar-link.active {
-    @apply bg-[#C41E3A] text-white;
+    background-color: var(--color-primary);
+    @apply text-white;
   }
 
   /* ---- Add to cart button (inline product card) ---- */
   .add-btn {
-    @apply h-8 w-8 rounded-full flex items-center justify-center bg-[#C41E3A] text-white font-bold text-lg transition-all duration-200 hover:bg-[#9B1530] active:scale-90 shadow-sm;
+    background-color: var(--color-primary);
+    color: white;
+    @apply h-8 w-8 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-200 active:scale-90 shadow-sm;
+  }
+
+  .add-btn:hover {
+    background-color: var(--color-primary-dark);
   }
 
   .qty-selector {
-    @apply flex items-center gap-1 bg-[#C41E3A] text-white rounded-full px-1 py-0.5;
+    background-color: var(--color-primary);
+    color: white;
+    @apply flex items-center gap-1 rounded-full px-1 py-0.5;
   }
 
   .qty-btn {
-    @apply h-6 w-6 rounded-full flex items-center justify-center hover:bg-[#9B1530] transition-colors font-bold text-sm;
+    @apply h-6 w-6 rounded-full flex items-center justify-center transition-colors font-bold text-sm;
+  }
+
+  .qty-btn:hover {
+    background-color: var(--color-primary-dark);
   }
 }
 
@@ -445,14 +501,14 @@ body {
 
 /* Focus visible outline - accessibility */
 :focus-visible {
-  outline: 2px solid #C41E3A;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
 /* Selection color */
 ::selection {
-  background: rgba(196, 30, 58, 0.15);
-  color: #C41E3A;
+  background: rgba(26, 120, 80, 0.15);
+  color: var(--color-primary);
 }
 
 /* Print styles */

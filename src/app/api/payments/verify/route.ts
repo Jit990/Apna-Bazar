@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { paymentVerificationSchema } from '@/lib/validations';
 import { verifyPaymentSignature } from '@/services/payment.service';
-import { notifyOrderConfirmed, notifyPaymentSuccess } from '@/services/notification.service';
+import { notifyPaymentSuccess } from '@/services/notification.service';
 import type { ApiResponse } from '@/types';
 
 // POST /api/payments/verify - Verify Razorpay payment signature

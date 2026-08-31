@@ -100,6 +100,7 @@ export interface Product {
     weight_grams: number | null;
     // Flexible metadata for different product types
     metadata: Record<string, unknown>;
+    key_features?: string[];
     // Flags
     is_active: boolean;
     is_featured: boolean;

@@ -95,10 +95,11 @@ export async function GET(request: NextRequest) {
             success: true,
             data: response,
         });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('[GET /api/products]', error);
+        const errmsg = error instanceof Error ? error.message : String(error);
         return NextResponse.json<ApiResponse>(
-            { success: false, error: 'Failed to fetch products' },
+            { success: false, error: 'Failed to fetch products: ' + errmsg },
             { status: 500 }
         );
     }

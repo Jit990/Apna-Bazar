@@ -64,7 +64,7 @@ export function calculatePriceSummary(
     }
 
     // 5. Tax (calculated on selling price after coupon)
-    const taxableAmount = Math.max(0, subtotalAtSelling - couponDiscount);
+    // 5. Tax (calculated on selling price after coupon)
     const taxAmount = items.reduce((sum, item) => {
         const product = item.product;
         if (!product || !product.tax_percent) return sum;

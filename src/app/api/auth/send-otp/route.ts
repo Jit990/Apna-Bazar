@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { sendOTP, verifyOTP } from '@/services/otp.service';
+import { sendOTP } from '@/services/otp.service';
 import type { ApiResponse } from '@/types';
 
 // POST /api/auth/send-otp

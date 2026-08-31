@@ -1,5 +1,5 @@
 import { Package, Plus } from 'lucide-react';
-import Link from 'next/link';
+
 import { createClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
 

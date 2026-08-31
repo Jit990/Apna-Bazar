@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     try {
         const supabase = await createClient();
         const { searchParams } = new URL(request.url);
-        const includeSubcategories = searchParams.get('include_subs') === 'true';
+        // const includeSubcategories = searchParams.get('include_subs') === 'true';
         const parentId = searchParams.get('parent_id');
 
         let query = supabase

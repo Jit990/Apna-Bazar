@@ -1,7 +1,7 @@
 import { ShoppingBag } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { formatPrice, formatDateTime } from '@/lib/utils';
-import Link from 'next/link';
+
 
 export default async function AdminOrdersPage() {
     const supabase = await createClient();
@@ -50,16 +50,16 @@ export default async function AdminOrdersPage() {
                                     </td>
                                     <td className="px-5 py-4">
                                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${o.payment_status === 'paid' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                                : o.payment_status === 'failed' ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-                                                    : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
+                                            : o.payment_status === 'failed' ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                                                : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
                                             }`}>
                                             {o.payment_status}
                                         </span>
                                     </td>
                                     <td className="px-5 py-4">
                                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${o.status === 'delivered' ? 'bg-emerald-500/10 text-emerald-400'
-                                                : o.status === 'cancelled' ? 'bg-gray-800 text-gray-500'
-                                                    : 'bg-blue-500/10 text-blue-400'
+                                            : o.status === 'cancelled' ? 'bg-gray-800 text-gray-500'
+                                                : 'bg-blue-500/10 text-blue-400'
                                             }`}>
                                             {o.status.replace(/_/g, ' ')}
                                         </span>

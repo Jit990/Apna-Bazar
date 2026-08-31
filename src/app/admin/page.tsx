@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import {
-    ShoppingBag, TrendingUp, Users, Package, AlertTriangle,
-    CheckCircle, XCircle, Clock, DollarSign, ArrowUpRight,
+    ShoppingBag, Users, AlertTriangle,
+    CheckCircle, Clock, DollarSign, ArrowUpRight,
 } from 'lucide-react';
 import { formatPrice, formatDateTime } from '@/lib/utils';
 import Link from 'next/link';

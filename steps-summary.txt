@@ -1,0 +1,4 @@
+- checkout-flow.spec.ts (0ms)
+  - Critical Path: Login -> Add to Cart -> Checkout (0ms)
+    - Complete purchase flow end-to-end (0ms)
+          ERROR: [31mTest timeout of 30000ms exceeded.[39m

@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
         const cleanPhone = phone.replace(/\D/g, '');
 
         // 1. Verify OTP using custom service
-        const verification = verifyOTP(cleanPhone, otp);
+        const verification = await verifyOTP(cleanPhone, otp);
         if (!verification.valid) {
             return NextResponse.json({ success: false, error: verification.message }, { status: 400 });
         }
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
         const supabase = await createClient(); // assuming await is needed inside createClient
         const dummyPassword = `ApnaBazar#${cleanPhone}`;
 
-        let { error: authError } = await supabase.auth.signInWithPassword({
+        const { error: authError } = await supabase.auth.signInWithPassword({
             phone: `+91${cleanPhone}`,
             password: dummyPassword
         });
@@ -57,8 +57,8 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({ success: true, message: 'Verified successfully' });
 
-    } catch (err: any) {
+    } catch (err) {
         console.error('[POST /api/auth/verify-otp]', err);
-        return NextResponse.json({ success: false, error: err.message || 'Internal server error' }, { status: 500 });
+        return NextResponse.json({ success: false, error: err instanceof Error ? err.message : 'Internal server error' }, { status: 500 });
     }
 }
