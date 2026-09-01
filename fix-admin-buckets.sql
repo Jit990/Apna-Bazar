@@ -1,0 +1,1 @@
+INSERT INTO storage.buckets (id, name, public) VALUES ('products', 'products', true), ('categories', 'categories', true) ON CONFLICT (id) DO NOTHING;

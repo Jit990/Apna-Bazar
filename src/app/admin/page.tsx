@@ -73,20 +73,22 @@ export default async function AdminDashboard() {
     const stats = await getDashboardStats();
 
     const statCards = [
-        { title: "Today's Revenue", value: formatPrice(stats.todayRevenue), icon: DollarSign, color: 'text-green-400', bg: 'bg-green-500/10', trend: '↑' },
-        { title: "Today's Orders", value: stats.todayOrderCount.toString(), icon: ShoppingBag, color: 'text-blue-400', bg: 'bg-blue-500/10', trend: '' },
-        { title: 'Pending Orders', value: stats.pendingOrderCount.toString(), icon: Clock, color: 'text-yellow-400', bg: 'bg-yellow-500/10', trend: '' },
-        { title: 'Low Stock Items', value: stats.lowStockCount.toString(), icon: AlertTriangle, color: 'text-red-400', bg: 'bg-red-500/10', trend: '' },
-        { title: 'Total Customers', value: stats.totalCustomers.toString(), icon: Users, color: 'text-purple-400', bg: 'bg-purple-500/10', trend: '' },
-        { title: 'Completed Today', value: stats.todayCompleted.toString(), icon: CheckCircle, color: 'text-emerald-400', bg: 'bg-emerald-500/10', trend: '' },
+        { title: "Revenue_Sequence", value: formatPrice(stats.todayRevenue), icon: DollarSign, color: 'text-[#39ff14]', bg: 'bg-[#39ff14]/10', trend: '↑' },
+        { title: "Active_Transmissions", value: stats.todayOrderCount.toString(), icon: ShoppingBag, color: 'text-[#00f5ff]', bg: 'bg-[#00f5ff]/10', trend: '' },
+        { title: 'Pending_Protocols', value: stats.pendingOrderCount.toString(), icon: Clock, color: 'text-[#ffb000]', bg: 'bg-[#ffb000]/10', trend: '' },
+        { title: 'Critical_Inventory', value: stats.lowStockCount.toString(), icon: AlertTriangle, color: 'text-[#ff003c]', bg: 'bg-[#ff003c]/10', trend: '' },
+        { title: 'Client_Nodes', value: stats.totalCustomers.toString(), icon: Users, color: 'text-[#bc13fe]', bg: 'bg-[#bc13fe]/10', trend: '' },
+        { title: 'Terminated_Today', value: stats.todayCompleted.toString(), icon: CheckCircle, color: 'text-[#39ff14]', bg: 'bg-[#39ff14]/10', trend: '' },
     ];
 
     return (
-        <div className="space-y-6 animate-fade-in">
+        <div className="space-y-6 animate-fade-in font-mono">
             {/* Header */}
-            <div>
-                <h1 className="text-2xl font-brand font-bold text-white">Dashboard</h1>
-                <p className="text-gray-400 text-sm mt-1">Welcome back! Here&apos;s what&apos;s happening today.</p>
+            <div className="border-b border-[#00f5ff]/30 pb-4 mb-6">
+                <h1 className="text-3xl font-black text-[#00f5ff] uppercase tracking-widest drop-shadow-[0_0_8px_#00f5ff] flex items-center gap-2">
+                    <span className="text-[#39ff14]">&gt;</span> Mainframe_Status
+                </h1>
+                <p className="text-[#39ff14] text-xs mt-2 uppercase tracking-widest opacity-80 animate-pulse">Initializing real-time telemetry...</p>
             </div>
 
             {/* Stats Grid */}
@@ -94,10 +96,11 @@ export default async function AdminDashboard() {
                 {statCards.map((stat) => {
                     const Icon = stat.icon;
                     return (
-                        <div key={stat.title} className="bg-gray-900 rounded-2xl p-4 border border-gray-800">
+                        <div key={stat.title} className="bg-black rounded border border-[#39ff14]/40 shadow-[0_0_10px_rgba(57,255,20,0.1)] p-4 relative overflow-hidden group hover:border-[#00f5ff] hover:shadow-[0_0_20px_rgba(0,245,255,0.2)] transition-all">
+                            <div className="absolute top-0 right-0 w-8 h-8 bg-gradient-to-bl from-[#39ff14]/20 to-transparent"></div>
                             <div className="flex items-start justify-between mb-3">
-                                <div className={`w-10 h-10 rounded-xl ${stat.bg} flex items-center justify-center`}>
-                                    <Icon size={20} className={stat.color} />
+                                <div className={`w-10 h-10 border border-current ${stat.bg} ${stat.color} flex items-center justify-center`}>
+                                    <Icon size={18} />
                                 </div>
                                 {stat.trend && (
                                     <span className="text-green-400 text-xs font-semibold flex items-center gap-1">

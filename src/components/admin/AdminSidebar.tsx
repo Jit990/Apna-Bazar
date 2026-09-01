@@ -54,20 +54,21 @@ export function AdminSidebar({ userRole = 'admin', userName }: AdminSidebarProps
     };
 
     const renderSidebarContent = () => (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full bg-[#0a0a0c] border-r border-[#00f5ff]/20 shadow-[0_0_20px_rgba(0,245,255,0.1)]">
             {/* Logo */}
-            <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-800">
-                <div className="w-9 h-9 rounded-xl bg-[#C41E3A] flex items-center justify-center flex-shrink-0">
-                    <span className="text-white font-black text-sm font-brand">AB</span>
+            <div className="flex items-center gap-3 px-4 py-5 border-b border-[#00f5ff]/20 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[#00f5ff]/5 opacity-50 animate-pulse"></div>
+                <div className="w-10 h-10 rounded shadow-[0_0_15px_#39ff14] bg-black border border-[#39ff14] flex items-center justify-center flex-shrink-0 z-10">
+                    <span className="text-[#39ff14] font-black text-sm tracking-widest font-mono">SYS</span>
                 </div>
-                <div>
-                    <div className="text-white font-brand font-black text-base leading-none">Apna Bazar</div>
-                    <div className="text-gray-500 text-[10px] font-medium capitalize">{userRole} Panel</div>
+                <div className="z-10">
+                    <div className="text-[#00f5ff] font-mono font-black text-lg leading-none tracking-widest uppercase drop-shadow-[0_0_5px_rgba(0,245,255,0.8)]">Root</div>
+                    <div className="text-[#39ff14] text-[10px] font-mono capitalize tracking-widest">{userRole} Access_</div>
                 </div>
             </div>
 
             {/* Nav */}
-            <nav className="flex-1 py-3 overflow-y-auto scrollbar-thin">
+            <nav className="flex-1 py-4 overflow-y-auto scrollbar-thin px-2 space-y-1">
                 {navItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = item.href === '/admin'
@@ -78,34 +79,40 @@ export function AdminSidebar({ userRole = 'admin', userName }: AdminSidebarProps
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={cn('admin-sidebar-link', isActive && 'active')}
+                            className={cn(
+                                'flex items-center gap-3 px-3 py-2.5 rounded text-sm font-mono transition-all duration-300 relative overflow-hidden group',
+                                isActive
+                                    ? 'bg-[#00f5ff]/10 text-[#00f5ff] border border-[#00f5ff]/50 shadow-[inset_4px_0_0_#00f5ff]'
+                                    : 'text-gray-400 hover:bg-[#39ff14]/5 hover:text-[#39ff14] border border-transparent'
+                            )}
                             onClick={() => setMobileOpen(false)}
                         >
-                            <Icon size={18} />
-                            <span>{item.label}</span>
+                            {isActive && <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-[#00f5ff] shadow-[0_0_10px_#00f5ff]"></div>}
+                            <Icon size={16} className={cn("transition-transform group-hover:scale-110", isActive && "drop-shadow-[0_0_8px_#00f5ff]")} />
+                            <span className="tracking-widest">{item.label}</span>
                         </Link>
                     );
                 })}
             </nav>
 
             {/* User + Logout */}
-            <div className="border-t border-gray-800 p-3">
-                <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-gray-800 mb-2">
-                    <div className="w-8 h-8 rounded-full bg-[#C41E3A] flex items-center justify-center flex-shrink-0">
-                        <Shield size={14} className="text-white" />
+            <div className="border-t border-[#00f5ff]/20 p-3 bg-[#0a0a0c]">
+                <div className="flex items-center gap-3 px-3 py-2.5 rounded bg-black border border-[#39ff14]/30 shadow-[inset_0_0_10px_rgba(57,255,20,0.1)] mb-2 relative overflow-hidden cursor-pointer hover:border-[#39ff14]/80 transition-colors">
+                    <div className="w-8 h-8 rounded bg-black border border-[#00f5ff] flex items-center justify-center flex-shrink-0">
+                        <Shield size={14} className="text-[#00f5ff]" />
                     </div>
-                    <div className="min-w-0">
-                        <div className="text-white text-sm font-semibold truncate">{userName ?? 'Admin'}</div>
-                        <div className="text-gray-400 text-[10px] capitalize">{userRole}</div>
+                    <div className="min-w-0 flex-1">
+                        <div className="text-[#39ff14] text-xs font-mono truncate tracking-wider">{userName ?? 'Admin'}</div>
+                        <div className="text-[#00f5ff] text-[9px] font-mono uppercase tracking-widest opacity-80">{userRole}_</div>
                     </div>
                 </div>
                 <button
                     onClick={handleLogout}
                     disabled={loggingOut}
-                    className="admin-sidebar-link w-full hover:bg-red-900/50 hover:text-red-400 disabled:opacity-50"
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-mono text-[#ff003c] border border-[#ff003c]/30 hover:bg-[#ff003c]/10 hover:border-[#ff003c]/80 hover:shadow-[0_0_15px_rgba(255,0,60,0.3)] transition-all disabled:opacity-50 tracking-widest uppercase items-center justify-center"
                 >
-                    <LogOut size={18} />
-                    <span>{loggingOut ? 'Logging out...' : 'Logout'}</span>
+                    <LogOut size={16} />
+                    <span>{loggingOut ? 'Terminating...' : 'Logout Process'}</span>
                 </button>
             </div>
         </div>

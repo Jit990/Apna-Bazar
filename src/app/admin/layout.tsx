@@ -37,9 +37,10 @@ export default async function AdminLayout({
         }
 
         return (
-            <div className="flex h-screen bg-gray-950 overflow-hidden">
+            <div className="flex h-screen bg-[#050505] overflow-hidden text-[#00f5ff] selection:bg-[#39ff14] selection:text-black font-mono">
+                <div className="fixed inset-0 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at center, rgba(0,245,255,0.03) 0%, transparent 70%)' }}></div>
                 <AdminSidebar userRole={profile.role} userName={profile.full_name} />
-                <main className="flex-1 overflow-auto ml-0 lg:ml-64 bg-gray-950">
+                <main className="flex-1 overflow-auto ml-0 lg:ml-64 relative z-10 scrollbar-thin scrollbar-thumb-[#00f5ff]/20">
                     <div className="p-6">
                         {children}
                     </div>
