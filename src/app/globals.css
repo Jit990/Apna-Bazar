@@ -17,11 +17,11 @@
   --color-accent: #FFD700;
   /* Gold accent */
 
-  /* Neutral */
-  --color-bg: #FAFAFA;
-  --color-bg-muted: #F5F5F5;
-  --color-border: #E5E7EB;
-  --color-border-muted: #F3F4F6;
+  /* Neutral - Strict Light Mode Baseline */
+  --color-bg: #FFFFFF;
+  --color-bg-muted: #F9FAFB;
+  --color-border: #F3F4F6;
+  --color-border-muted: #F8FAFC;
   --color-text: #111827;
   --color-text-muted: #6B7280;
   --color-text-light: #9CA3AF;

@@ -1,27 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { Search, ShoppingCart, Bell, MapPin, ChevronDown, X, User } from 'lucide-react';
+import { Search, ShoppingBag, User, ChevronDown, Mic, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
 
-interface HeaderProps {
-    cartCount?: number;
-    notificationCount?: number;
-    deliveryLocation?: string;
-    isLoggedIn?: boolean;
-}
-
-export function Header({
-    cartCount = 0,
-    notificationCount = 0,
-    deliveryLocation = 'Bajkul',
-    isLoggedIn = false,
-}: HeaderProps) {
-    const [searchOpen, setSearchOpen] = useState(false);
+export function Header() {
     const router = useRouter();
-    const pathname = usePathname();
+    const { itemCount } = useCart();
+    // Default mock data tailored to typical Qcommerce metrics pending backend configuration
+    const deliveryLocation = 'Floor Ground, Bajkul 721655';
 
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -33,126 +22,92 @@ export function Header({
     };
 
     return (
-        <header className="sticky top-0 z-40 bg-primary shadow-md safe-top">
-            <div className="max-w-[1280px] mx-auto">
-                {/* ── MOBILE HEADER (hidden on lg) ── */}
-                <div className="lg:hidden flex flex-col">
-                    <div className="px-3 py-2.5 flex items-center gap-3">
-                        <Link href="/" className="flex-shrink-0" aria-label="Apna Bazar Home">
-                            <div className="flex items-center gap-2">
-                                <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center shadow-sm">
-                                    <span className="text-primary font-black font-brand text-xs leading-none text-center">AB</span>
-                                </div>
-                                <div className="hidden sm:block">
-                                    <div className="font-brand font-black text-white text-lg leading-none">Apna Bazar</div>
-                                    <div className="text-emerald-100 text-[9px] font-medium leading-none">Sab Kuch, Apne Paas</div>
-                                </div>
-                            </div>
-                        </Link>
-
-                        <button className="flex-1 min-w-0 flex items-center gap-1 ml-1" aria-label="Change delivery location">
-                            <MapPin size={14} className="text-emerald-100 flex-shrink-0" />
-                            <div className="min-w-0 flex flex-col items-start">
-                                <div className="text-emerald-100 text-[10px] leading-none">Delivering to</div>
-                                <div className="text-white font-semibold text-sm flex items-center gap-0.5 truncate">
-                                    <span className="truncate">{deliveryLocation}</span>
-                                    <ChevronDown size={12} />
-                                </div>
-                            </div>
-                        </button>
-
-                        <div className="flex items-center gap-2.5">
-                            <button className="text-white p-1" onClick={() => setSearchOpen(!searchOpen)}>
-                                {searchOpen ? <X size={20} /> : <Search size={20} />}
-                            </button>
-                            <Link href="/cart" className="relative text-white p-1">
-                                <ShoppingCart size={22} />
-                                {cartCount > 0 && (
-                                    <span className="absolute -top-0.5 -right-0.5 h-4 w-4 bg-white text-primary text-[9px] font-black rounded-full flex items-center justify-center">
-                                        {cartCount > 99 ? '99+' : cartCount}
-                                    </span>
-                                )}
-                            </Link>
+        <header className="sticky top-0 z-40 bg-white pb-3 rounded-b-xl shadow-[0_2px_10px_rgba(0,0,0,0.03)] border-b border-gray-100">
+            {/* Top Row: Logo, ETA, Account */}
+            <div className="flex items-start justify-between px-4 pt-3 pb-2">
+                <div className="flex flex-col gap-1">
+                    {/* Fake Logo equivalent to the screenshot */}
+                    <div className="flex items-center gap-1.5">
+                        <div className="text-orange-500">
+                            <ShoppingBag size={20} className="fill-orange-500 stroke-orange-500" />
+                        </div>
+                        <h1 className="font-brand font-black text-xl tracking-tight leading-none flex gap-1">
+                            <span className="text-[#1A7850]">Apna</span>
+                            <span className="text-orange-500">Bazar</span>
+                        </h1>
+                    </div>
+                    {/* Time & Surge Badges */}
+                    <div className="flex items-center gap-2 mt-1.5">
+                        <h2 className="font-black text-2xl tracking-tighter text-gray-900 leading-none">18 minutes</h2>
+                        <div className="bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded flex items-center gap-1 shadow-sm border border-emerald-100">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span className="text-[9px] font-bold uppercase tracking-wider">Surge applicable</span>
                         </div>
                     </div>
 
-                    {/* Expandable Mobile Search */}
-                    <div className={cn('overflow-hidden transition-all duration-300', searchOpen ? 'max-h-16 opacity-100' : 'max-h-0 opacity-0')}>
-                        <div className="px-3 pb-2.5">
-                            <form onSubmit={handleSearch}>
-                                <div className="relative">
-                                    <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                                    <input name="q" type="search" placeholder="Search products, groceries..." className="w-full bg-white rounded-xl pl-9 pr-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50" />
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                    {/* Location Selector (matches the screenshot placement) */}
+                    <button className="flex items-center gap-1 mt-1 hover:opacity-80 active:opacity-60 transition-opacity">
+                        <span className="text-[11px] font-bold text-gray-800 uppercase">HOME</span>
+                        <span className="text-[11px] text-gray-500">- {deliveryLocation}</span>
+                        <ChevronDown size={14} className="text-gray-500" />
+                    </button>
                 </div>
 
-                {/* ── DESKTOP HEADER (visible on lg) ── */}
-                <div className="hidden lg:flex items-center justify-between px-6 py-3 gap-8">
-                    {/* Brand */}
-                    <Link href="/" className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
-                            <span className="text-primary font-black font-brand text-lg leading-none text-center">AB</span>
-                        </div>
-                        <div>
-                            <div className="font-brand font-black text-white text-2xl leading-none">Apna Bazar</div>
-                            <div className="text-emerald-100 text-xs font-semibold mt-1">Sab Kuch, Apne Paas</div>
-                        </div>
+                {/* Profile / Wallet Actions */}
+                <div className="flex items-center gap-3">
+                    {/* Fake Wallet */}
+                    <Link href="/account" className="flex items-center gap-1 bg-yellow-50/50 border border-yellow-200/50 px-2 py-1 rounded-full hover:bg-yellow-100/50 transition-colors">
+                        <span className="text-yellow-600 text-[10px] font-black tracking-tight">₹0</span>
                     </Link>
+                    {/* Profile Icon */}
+                    <Link href="/account" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors border border-gray-200 shadow-inner">
+                        <User size={20} className="text-gray-600" />
+                    </Link>
+                </div>
+            </div>
 
-                    {/* Desktop Location */}
-                    <button className="flex items-center gap-2 hover:bg-black/10 px-3 py-2 rounded-xl transition-colors">
-                        <MapPin size={22} className="text-white" />
-                        <div className="flex flex-col items-start min-w-[120px] max-w-[200px]">
-                            <span className="text-emerald-100 text-[10px] uppercase font-bold tracking-wider">Delivery Location</span>
-                            <div className="text-white font-bold text-sm flex items-center gap-1 w-full">
-                                <span className="truncate">{deliveryLocation}</span>
-                                <ChevronDown size={14} className="flex-shrink-0 text-emerald-100" />
-                            </div>
+            {/* Desktop Wrapper (Hidden on mobile entirely as we built a dedicated mobile first layout) */}
+            <div className="px-4 lg:hidden">
+                <form onSubmit={handleSearch} className="relative mt-1">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                        <Search size={18} className="text-gray-900 stroke-[2.5]" />
+                    </div>
+                    <input
+                        name="q"
+                        type="search"
+                        placeholder='Search "kurkure, shampoo, milk..."'
+                        className="block w-full pl-10 pr-10 py-3.5 bg-white border border-gray-200 rounded-2xl text-sm font-medium outline-none placeholder-gray-400 focus:ring-1 focus:ring-gray-200 focus:border-gray-300 shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
+                    />
+                    <button type="button" className="absolute inset-y-0 right-0 pr-3 flex items-center group">
+                        <div className="bg-gray-50 p-1.5 rounded-full border border-gray-200 group-hover:bg-gray-100 transition-colors">
+                            <Mic size={14} className="text-gray-600" />
                         </div>
                     </button>
+                </form>
+            </div>
 
-                    {/* Desktop Search */}
-                    <div className="flex-1 max-w-2xl">
-                        <form onSubmit={handleSearch}>
-                            <div className="relative group">
-                                <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" />
-                                <input
-                                    name="q"
-                                    type="search"
-                                    placeholder="Search for groceries, personal care, household items..."
-                                    className="w-full bg-white rounded-xl pl-12 pr-6 py-3.5 text-sm font-medium text-gray-900 border-none outline-none shadow-sm focus:ring-4 focus:ring-emerald-500/20 transition-all"
-                                />
-                                <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-emerald-800 transition-colors">
-                                    Search
-                                </button>
-                            </div>
-                        </form>
+            {/* Desktop Fallback */}
+            <div className="hidden lg:flex items-center justify-between px-8 pt-4 pb-2">
+                <div className="flex items-center gap-2">
+                    <h1 className="font-brand font-black text-3xl tracking-tight leading-none flex gap-1">
+                        <span className="text-[#1A7850]">Apna</span>
+                        <span className="text-orange-500">Bazar</span>
+                    </h1>
+                </div>
+                <form onSubmit={handleSearch} className="relative w-[500px]">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                        <Search size={18} className="text-gray-900 stroke-[2.5]" />
                     </div>
-
-                    {/* Desktop Navigation */}
-                    <div className="flex items-center gap-6 text-white font-bold text-sm">
-                        <Link href="/categories" className="hover:text-emerald-200 transition-colors">Categories</Link>
-
-                        <Link href="/account" className="flex items-center gap-2 hover:bg-black/10 px-3 py-2 rounded-xl transition-colors">
-                            <User size={20} />
-                            <span>Account</span>
-                        </Link>
-
-                        <Link href="/cart" className="flex items-center gap-2 bg-white text-primary px-4 py-2 rounded-xl hover:bg-emerald-50 transition-colors shadow-sm">
-                            <div className="relative">
-                                <ShoppingCart size={20} />
-                                {cartCount > 0 && (
-                                    <span className="absolute -top-1.5 -right-2 h-4 w-4 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center ring-2 ring-white">
-                                        {cartCount > 99 ? '99+' : cartCount}
-                                    </span>
-                                )}
-                            </div>
-                            <span className="ml-1">Cart</span>
-                        </Link>
-                    </div>
+                    <input name="q" type="search" placeholder='Search "kurkure, shampoo, milk..."' className="block w-full pl-10 pr-10 py-3.5 bg-white border border-gray-200 rounded-2xl text-sm font-medium outline-none placeholder-gray-400 focus:border-gray-300 shadow-sm" />
+                </form>
+                <div className="flex items-center gap-6">
+                    <Link href="/cart" className="relative">
+                        <ShoppingBag size={24} className="text-gray-800" />
+                        {itemCount > 0 && <span className="absolute -top-1.5 -right-2 h-5 min-w-[20px] bg-red-500 text-white text-[10px] items-center justify-center rounded-full flex font-bold">{itemCount > 99 ? '99+' : itemCount}</span>}
+                    </Link>
+                    <Link href="/account">
+                        <User size={24} className="text-gray-800" />
+                    </Link>
                 </div>
             </div>
         </header>

@@ -6,12 +6,11 @@ import { MobileNav } from '@/components/layout/MobileNav';
 import { useCart } from '@/context/CartContext';
 
 function LayoutInner({ children }: { children: React.ReactNode }) {
-    const { itemCount } = useCart();
     return (
         <>
-            <Header cartCount={itemCount} />
-            <main className="has-bottom-nav min-h-screen">{children}</main>
-            <MobileNav cartCount={itemCount} />
+            <Header />
+            <main className="pb-16 min-h-screen">{children}</main>
+            <MobileNav />
         </>
     );
 }
