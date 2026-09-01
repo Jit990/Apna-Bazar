@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Baloo_2 } from 'next/font/google';
+import { Inter, Baloo_2, Share_Tech_Mono, Fira_Code } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'sonner';
+import { MatrixCanvas } from '@/components/MatrixCanvas';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -16,42 +17,30 @@ const baloo2 = Baloo_2({
   display: 'swap',
 });
 
+const shareTechMono = Share_Tech_Mono({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-mono',
+});
+
+const firaCode = Fira_Code({
+  subsets: ['latin'],
+  variable: '--font-code',
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'),
   title: {
-    default: 'Apna Bazar – Han Rishta, Han Ehsaas, Humare Saath',
-    template: '%s | Apna Bazar',
+    default: 'CYBER-SENTINEL | Apna Bazar',
+    template: '%s | SYS.ACTIVE',
   },
-  description:
-    'Shop jewelry, cosmetics, beauty, gifts, toys, stationery and more at Apna Bazar – your trusted local shop in Bajkul, West Bengal. Fast delivery, Cash on Delivery available.',
-  keywords: [
-    'Apna Bazar', 'local shop', 'Bajkul', 'West Bengal', 'jewelry', 'cosmetics',
-    'beauty products', 'gifts', 'stationery', 'toys', 'online shopping', 'fast delivery',
-  ],
-  openGraph: {
-    type: 'website',
-    locale: 'en_IN',
-    siteName: 'Apna Bazar',
-    title: 'Apna Bazar – Han Rishta, Han Ehsaas, Humare Saath',
-    description: 'Your trusted local shop – jewelry, cosmetics, beauty, gifts & more.',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Apna Bazar',
-    description: 'Your trusted local shop in Bajkul, West Bengal.',
-  },
-  manifest: '/manifest.json',
-  icons: {
-    icon: '/icons/icon-192.png',
-    apple: '/icons/apple-touch-icon.png',
-  },
+  description: 'Advanced Quick-Commerce Forensic Logging System',
 };
 
 export const viewport: Viewport = {
-  themeColor: '#C41E3A',
+  themeColor: '#00ffcc',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -60,15 +49,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${baloo2.variable}`}>
-      <body className="font-sans text-gray-900 antialiased min-h-[100dvh] overflow-x-hidden flex flex-col bg-gray-50">
-        {children}
+    <html lang="en" className={`${shareTechMono.variable} ${firaCode.variable}`}>
+      <body className="font-mono text-[#00ffcc] antialiased min-h-[100dvh] overflow-x-hidden flex flex-col bg-[#050505]">
+        <MatrixCanvas />
+        <div className="fixed inset-0 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at center, rgba(0,245,255,0.03) 0%, transparent 70%)' }}></div>
+
+        <div className="relative z-10 w-full h-full flex flex-col flex-1">
+          {children}
+        </div>
+
         <Toaster
           position="top-center"
           toastOptions={{
             style: {
-              fontFamily: 'Inter, sans-serif',
-              borderRadius: '12px',
+              background: 'black',
+              border: '1px solid #00ffcc',
+              color: '#00ffcc',
+              fontFamily: 'var(--font-mono), monospace',
+              borderRadius: '4px',
+              boxShadow: '0 0 15px rgba(0,255,204,0.3)'
             },
           }}
         />

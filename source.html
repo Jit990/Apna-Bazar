@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYBER-SENTINEL | Brute Force Detector</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Code:wght@300;500&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <canvas id="matrix-canvas"></canvas>
+
+  <div class="overlay"></div>
+
+  <div class="main-wrapper">
+    <header class="hacker-header">
+      <div class="glitch-wrapper">
+        <h1 class="glitch" data-text="CYBER-SENTINEL">CYBER-SENTINEL</h1>
+      </div>
+      <p class="subtitle">Advanced Brute-Force Detection & Forensic Logging System</p>
+      <div class="system-status">
+        <span class="status-dot"></span> SYSTEM: <span id="sys-status">ACTIVE</span> | <span id="current-time"></span>
+      </div>
+    </header>
+
+    <!-- LOGIN SECTION -->
+    <section class="login-section" id="loginBox">
+      <div class="scanner-line"></div>
+      <div class="terminal-header">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="title">AUTH_GATEWAY_V2.1</span>
+      </div>
+      <div class="login-content">
+        <div class="input-group">
+          <label for="username">USERNAME</label>
+          <input type="text" id="username" placeholder="Enter Username..." autocomplete="off">
+        </div>
+        <div class="input-group">
+          <label for="password">PASSWORD</label>
+          <input type="password" id="password" placeholder="Enter Password..." autocomplete="off">
+        </div>
+        <button onclick="attemptLogin()" class="cyber-btn">
+          <span class="btn-text">INITIALIZE ACCESS</span>
+          <span class="btn-glitch"></span>
+        </button>
+        <div id="status" class="login-status"></div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD (Hidden until login) -->
+    <section id="dashboard" class="dashboard-container hidden">
+      <div class="grid-layout">
+        <!-- Data Visualizer -->
+        <div class="glass-panel stats-panel">
+          <h3>SYSTEM METRICS</h3>
+          <div class="stats-grid">
+            <div class="stat-card success">
+              <span class="label">AUTHORIZED</span>
+              <span class="value" id="successCount">0</span>
+            </div>
+            <div class="stat-card danger">
+              <span class="label">REJECTED</span>
+              <span class="value" id="failCount">0</span>
+            </div>
+            <div class="stat-card warning">
+              <span class="label">THREAT_LEVEL</span>
+              <span class="value" id="threatLevel">LOW</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Log Panel -->
+        <div class="glass-panel log-panel">
+          <div class="panel-header">
+            <h3>FORENSIC TRAFFIC LOGS</h3>
+            <div class="controls">
+              <button onclick="clearLogs()" class="small-btn">CLEAR</button>
+              <button onclick="exportLogs()" class="small-btn highlight">EXPORT</button>
+            </div>
+          </div>
+          <div id="logPanel" class="terminal-logs"></div>
+        </div>
+
+        <!-- Threat Map / Details -->
+        <div class="glass-panel info-panel">
+          <h3>SECURITY INTEL</h3>
+          <div id="securityIntel" class="intel-content">
+            <p>> Monitoring port 80/443...</p>
+            <p>> Firewall: Layer 7 Active</p>
+            <p>> IPS: Enabled</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

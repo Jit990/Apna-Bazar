@@ -1,60 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Baloo+2:wght@400;500;600;700;800&display=swap');
 
-@import "tailwindcss";
+--radius-lg: 20px;
+--radius-xl: 28px;
+--radius-full: 9999px;
 
-/* ============================================================
-   APNA BAZAR Design System – CSS Variables
-   ============================================================ */
-:root {
-  /* Brand Colors - Deep Forest Green primary, Orange secondary */
-  --color-primary: #1A7850;
-  /* Deep Forest Green */
-  --color-primary-dark: #145F3E;
-  --color-primary-light: #22A06B;
-  --color-secondary: #F07629;
-  /* Vibrant Orange */
-  --color-secondary-dark: #C25D1A;
-  --color-accent: #FFD700;
-  /* Gold accent */
+/* Typography */
+--font-sans: 'Inter',
+system-ui,
+sans-serif;
+--font-brand: 'Baloo 2',
+'Inter',
+sans-serif;
 
-  /* Neutral - Strict Light Mode Baseline */
-  --color-bg: #FFFFFF;
-  --color-bg-muted: #F9FAFB;
-  --color-border: #F3F4F6;
-  --color-border-muted: #F8FAFC;
-  --color-text: #111827;
-  --color-text-muted: #6B7280;
-  --color-text-light: #9CA3AF;
-
-  /* Status */
-  --color-success: #16A34A;
-  --color-warning: #D97706;
-  --color-error: #DC2626;
-  --color-info: #2563EB;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .05);
-  --shadow: 0 1px 3px rgba(0, 0, 0, .10), 0 1px 2px rgba(0, 0, 0, .06);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, .07), 0 2px 4px rgba(0, 0, 0, .06);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, .10), 0 4px 6px rgba(0, 0, 0, .05);
-  --shadow-xl: 0 20px 25px rgba(0, 0, 0, .10), 0 10px 10px rgba(0, 0, 0, .04);
-
-  /* Radius */
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --radius-full: 9999px;
-
-  /* Typography */
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-brand: 'Baloo 2', 'Inter', sans-serif;
-
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition: 0.25s ease;
-  --transition-slow: 0.4s ease;
+/* Transitions */
+--transition-fast: 0.15s ease;
+--transition: 0.25s ease;
+--transition-slow: 0.4s ease;
 }
 
 /* ============================================================
