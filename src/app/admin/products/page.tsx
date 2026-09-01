@@ -1,4 +1,6 @@
 import { Package, Plus } from 'lucide-react';
+import Link from 'next/link';
+import { DeleteProductButton } from './DeleteProductButton';
 
 import { createClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
@@ -20,9 +22,9 @@ export default async function AdminProductsPage() {
                     </h1>
                     <p className="text-gray-400 text-sm mt-1">Manage your catalog, stock, and pricing.</p>
                 </div>
-                <button className="btn-primary px-4 py-2 flex items-center gap-2 shadow-lg shadow-red-900/20 text-sm rounded-xl font-semibold">
+                <Link href="/admin/products/new" className="btn-primary px-4 py-2 flex items-center gap-2 shadow-lg shadow-red-900/20 text-sm rounded-xl font-semibold">
                     <Plus size={16} /> Add Product
-                </button>
+                </Link>
             </div>
 
             <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
@@ -63,8 +65,12 @@ export default async function AdminProductsPage() {
                                         </span>
                                     </td>
                                     <td className="px-5 py-4 text-right text-xs">
-                                        <button className="text-blue-400 font-semibold hover:underline px-2">Edit</button>
-                                        <button className="text-red-400 font-semibold hover:underline">Delete</button>
+                                        <div className="flex items-center justify-end gap-3">
+                                            <Link href={`/admin/products/${p.id}`} className="text-blue-400 font-semibold hover:underline flex items-center gap-1">
+                                                Edit
+                                            </Link>
+                                            <DeleteProductButton id={p.id} name={p.name} />
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
