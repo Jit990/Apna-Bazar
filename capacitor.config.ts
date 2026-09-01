@@ -7,7 +7,7 @@ const config: CapacitorConfig = {
 
   server: {
     // IMPORTANT: Replace this with your actual Vercel production URL before building the APK!
-    url: 'https://apnabazar-production.vercel.app',
+    url: 'https://apna-bazar-seven.vercel.app',
     cleartext: true,
   },
   plugins: {
