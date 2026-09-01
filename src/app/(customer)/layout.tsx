@@ -18,8 +18,13 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
 
 export default function CustomerLayout({ children }: { children: React.ReactNode }) {
     return (
-        <CartProvider>
-            <LayoutInner>{children}</LayoutInner>
-        </CartProvider>
+        <div className="bg-gray-100 sm:bg-gray-200 min-h-screen">
+            <div className="mx-auto max-w-md sm:max-w-md lg:max-w-full min-h-[100dvh] relative bg-gray-50 shadow-2xl sm:my-0 lg:my-0 sm:rounded-none lg:rounded-none overflow-hidden">
+                <CartProvider>
+                    <LayoutInner>{children}</LayoutInner>
+                </CartProvider>
+            </div>
+        </div>
     );
 }
+

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
+import { createServerClient } from '@supabase/ssr';
 import { verifyOTP } from '@/services/otp.service';
 
 // POST /api/auth/verify-otp
@@ -20,42 +21,116 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ success: false, error: verification.message }, { status: 400 });
         }
 
-        // 2. Authenticate with Supabase using dummy password strategy
-        const supabase = await createClient(); // assuming await is needed inside createClient
+        // 2. Use admin client to find or create the user
+        const adminClient = await createAdminClient();
         const dummyPassword = `ApnaBazar#${cleanPhone}`;
+        const phoneWithCountry = `+91${cleanPhone}`;
 
-        const { error: authError } = await supabase.auth.signInWithPassword({
-            phone: `+91${cleanPhone}`,
-            password: dummyPassword
-        });
+        // Try to find existing user by phone
+        const { data: existingUsers } = await adminClient.auth.admin.listUsers();
+        const existingUser = existingUsers?.users?.find(
+            (u) => u.phone === phoneWithCountry || u.phone === cleanPhone
+        );
 
-        // 3. If login fails, user might not exist, create them natively
-        if (authError) {
-            const adminClient = await createAdminClient();
+        let userId: string;
 
-            const { error: createError } = await adminClient.auth.admin.createUser({
-                phone: `+91${cleanPhone}`,
+        if (existingUser) {
+            userId = existingUser.id;
+            // Update password in case it was changed
+            await adminClient.auth.admin.updateUserById(userId, {
                 password: dummyPassword,
-                phone_confirm: true
+                phone_confirm: true,
+            });
+        } else {
+            // Create new user
+            const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
+                phone: phoneWithCountry,
+                password: dummyPassword,
+                phone_confirm: true,
+                user_metadata: {
+                    phone: cleanPhone,
+                    full_name: '',
+                },
             });
 
-            if (createError) {
+            if (createError || !newUser?.user) {
                 console.error('Failed to create user:', createError);
                 return NextResponse.json({ success: false, error: 'Failed to create user account' }, { status: 500 });
             }
 
-            // Now sign in
-            const { error: signInError } = await supabase.auth.signInWithPassword({
-                phone: `+91${cleanPhone}`,
-                password: dummyPassword
-            });
+            userId = newUser.user.id;
 
-            if (signInError) {
-                return NextResponse.json({ success: false, error: 'Account created but failed to sign in' }, { status: 500 });
+            // Create profile row for new user
+            const { error: profileError } = await adminClient
+                .from('profiles')
+                .upsert({
+                    user_id: userId,
+                    phone: cleanPhone,
+                    role: 'customer',
+                    is_active: true,
+                    full_name: '',
+                }, { onConflict: 'user_id' });
+
+            if (profileError) {
+                console.error('Failed to create profile:', profileError);
+                // Non-fatal — continue with login
             }
         }
 
-        return NextResponse.json({ success: true, message: 'Verified successfully' });
+        // 3. Ensure profile exists for existing users too
+        const { data: existingProfile } = await adminClient
+            .from('profiles')
+            .select('id')
+            .eq('user_id', userId)
+            .single();
+
+        if (!existingProfile) {
+            await adminClient.from('profiles').upsert({
+                user_id: userId,
+                phone: cleanPhone,
+                role: 'customer',
+                is_active: true,
+                full_name: '',
+            }, { onConflict: 'user_id' });
+        }
+
+        // 4. Sign in using the Supabase server client that writes cookies to the response
+        let response = NextResponse.json({ success: true, message: 'Verified successfully' });
+
+        const supabase = createServerClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                cookies: {
+                    getAll() {
+                        return request.cookies.getAll();
+                    },
+                    setAll(cookiesToSet) {
+                        // Set on the request for downstream reads
+                        cookiesToSet.forEach(({ name, value }) =>
+                            request.cookies.set(name, value)
+                        );
+                        // Set on the response so the browser gets them
+                        response = NextResponse.json({ success: true, message: 'Verified successfully' });
+                        cookiesToSet.forEach(({ name, value, options }) =>
+                            response.cookies.set(name, value, options)
+                        );
+                    },
+                },
+            }
+        );
+
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+            phone: phoneWithCountry,
+            password: dummyPassword,
+        });
+
+        if (signInError) {
+            console.error('Sign in error after verification:', signInError);
+            return NextResponse.json({ success: false, error: 'Account verified but failed to sign in. Please try again.' }, { status: 500 });
+        }
+
+        return response;
 
     } catch (err) {
         console.error('[POST /api/auth/verify-otp]', err);

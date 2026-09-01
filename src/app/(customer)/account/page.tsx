@@ -23,7 +23,7 @@ export default function AccountPage() {
             setIsLoggedIn(!!session);
 
             if (session) {
-                const { data } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+                const { data } = await supabase.from('profiles').select('*').eq('user_id', session.user.id).single();
                 setProfile(data || { phone: session.user.phone });
             }
             setLoading(false);

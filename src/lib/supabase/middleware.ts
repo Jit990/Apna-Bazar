@@ -30,8 +30,11 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser();
 
-    // Protect /admin routes
-    if (request.nextUrl.pathname.startsWith('/admin')) {
+    // Protect /admin routes — EXCLUDE /admin/login to prevent infinite redirect loop
+    const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
+    const isAdminLogin = request.nextUrl.pathname === '/admin/login';
+
+    if (isAdminRoute && !isAdminLogin) {
         if (!user) {
             const url = request.nextUrl.clone();
             url.pathname = '/admin/login';
@@ -46,7 +49,25 @@ export async function updateSession(request: NextRequest) {
             .single();
 
         if (!profile || !['admin', 'manager', 'staff'].includes(profile.role)) {
-            return new NextResponse('Unauthorized', { status: 403 });
+            const url = request.nextUrl.clone();
+            url.pathname = '/admin/login';
+            url.searchParams.set('error', 'unauthorized');
+            return NextResponse.redirect(url);
+        }
+    }
+
+    // If user is already logged in as admin and visits /admin/login, redirect to dashboard
+    if (isAdminLogin && user) {
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('user_id', user.id)
+            .single();
+
+        if (profile && ['admin', 'manager', 'staff'].includes(profile.role)) {
+            const url = request.nextUrl.clone();
+            url.pathname = '/admin';
+            return NextResponse.redirect(url);
         }
     }
 
