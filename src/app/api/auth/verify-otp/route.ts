@@ -23,7 +23,12 @@ export async function POST(request: NextRequest) {
 
         // 2. Use admin client to find or create the user
         const adminClient = await createAdminClient();
-        const dummyPassword = `ApnaBazar#${cleanPhone}`;
+
+        // Secure deterministic password generation (prevents brute forcing Supabase directly)
+        const crypto = await import('crypto');
+        const secret = process.env.NEXTAUTH_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || 'fallback-secret-50212391';
+        const securePassword = crypto.createHmac('sha256', secret).update(cleanPhone).digest('hex').slice(0, 32);
+
         const phoneWithCountry = `+91${cleanPhone}`;
 
         // Try to find existing user by phone
@@ -38,14 +43,14 @@ export async function POST(request: NextRequest) {
             userId = existingUser.id;
             // Update password in case it was changed
             await adminClient.auth.admin.updateUserById(userId, {
-                password: dummyPassword,
+                password: securePassword,
                 phone_confirm: true,
             });
         } else {
             // Create new user
             const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
                 phone: phoneWithCountry,
-                password: dummyPassword,
+                password: securePassword,
                 phone_confirm: true,
                 user_metadata: {
                     phone: cleanPhone,
@@ -122,7 +127,7 @@ export async function POST(request: NextRequest) {
 
         const { error: signInError } = await supabase.auth.signInWithPassword({
             phone: phoneWithCountry,
-            password: dummyPassword,
+            password: securePassword,
         });
 
         if (signInError) {

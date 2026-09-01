@@ -164,39 +164,59 @@ export async function verifyOTP(phone: string, otp: string): Promise<{ valid: bo
 // ── Provider implementations ──────────────────────────────────────────────────
 
 async function sendViaMSG91(phone: string, otp: string): Promise<OTPResult> {
-    const url = `https://api.msg91.com/api/v5/otp`;
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', authkey: process.env.MSG91_API_KEY! },
-        body: JSON.stringify({
-            template_id: process.env.MSG91_TEMPLATE_ID,
-            mobile: `91${phone}`,
-            authkey: process.env.MSG91_API_KEY,
-            otp,
-        }),
-    });
-
-    if (!response.ok) {
-        throw new Error(`MSG91 error: ${response.statusText}`);
+    if (!process.env.MSG91_API_KEY || !process.env.MSG91_TEMPLATE_ID) {
+        console.error('[MSG91] Missing API Key or Template ID in Env Vars');
+        throw new Error('MSG91 connection missing configuration');
     }
 
-    return { success: true, message: 'OTP sent successfully' };
+    try {
+        const url = `https://api.msg91.com/api/v5/otp`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                authkey: process.env.MSG91_API_KEY,
+            },
+            body: JSON.stringify({
+                template_id: process.env.MSG91_TEMPLATE_ID,
+                mobile: `91${phone}`,
+                authkey: process.env.MSG91_API_KEY,
+                otp,
+            }),
+        });
+
+        const rawResult = await response.text();
+        let jsonResult: any = {};
+        try {
+            jsonResult = JSON.parse(rawResult);
+        } catch { /* ignore non json */ }
+
+        if (!response.ok || jsonResult.type === 'error') {
+            console.error('[MSG91 Error]', rawResult);
+            throw new Error(jsonResult.message || `MSG91 error: ${response.statusText}`);
+        }
+
+        return { success: true, message: 'OTP sent successfully via SMS' };
+    } catch (e: any) {
+        console.error('[MSG91 Fault]', e.message);
+        throw e;
+    }
 }
 
 async function sendViaTwilio(phone: string, otp: string): Promise<OTPResult> {
+    if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN) {
+        throw new Error('Twilio connection missing configuration');
+    }
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const twilio = require('twilio') as {
         (accountSid: string, authToken: string): {
             messages: { create: (opts: Record<string, string>) => Promise<unknown> };
         };
     };
-    const client = twilio(
-        process.env.TWILIO_ACCOUNT_SID!,
-        process.env.TWILIO_AUTH_TOKEN!
-    );
+    const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
     await client.messages.create({
-        body: `Your Apna Bazar OTP is: ${otp}. Valid for ${OTP_EXPIRY_MINUTES} minutes. Do not share with anyone.`,
+        body: `Your Apna Bazar login OTP is ${otp}. Valid for 10 minutes. Do not share this with anyone.`,
         from: process.env.TWILIO_PHONE_NUMBER!,
         to: `+91${phone}`,
     });

@@ -16,6 +16,16 @@ export default function AccountPage() {
     const [devOtp, setDevOtp] = useState<string | null>(null);
     const [profile, setProfile] = useState<{ full_name?: string, phone?: string, email?: string } | null>(null);
 
+    const [countdown, setCountdown] = useState(0);
+
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+        if (countdown > 0) {
+            timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+        }
+        return () => clearTimeout(timer);
+    }, [countdown]);
+
     useEffect(() => {
         const checkSession = async () => {
             const supabase = createClient();
@@ -31,9 +41,11 @@ export default function AccountPage() {
         checkSession();
     }, []);
 
-    const handleSendOTP = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSendOTP = async (e?: React.FormEvent) => {
+        e?.preventDefault();
         if (phone.length < 10) return toast.error('Enter valid phone number');
+        if (countdown > 0) return toast.error(`Please wait ${countdown}s before resending.`);
+
         setLoading(true);
         try {
             const res = await fetch('/api/auth/send-otp', {
@@ -45,6 +57,7 @@ export default function AccountPage() {
             if (data.success) {
                 toast.success('OTP sent successfully');
                 setStep(2);
+                setCountdown(60); // 60 second cooldown
                 if (data.data?.devOtp) setDevOtp(data.data.devOtp);
             } else {
                 toast.error(data.error || 'Failed to send OTP');
@@ -56,15 +69,14 @@ export default function AccountPage() {
         }
     };
 
-    const handleVerifyOTP = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (otp.length < 6) return toast.error('Enter valid OTP');
+    const handleVerify = async (otpValue: string) => {
+        if (otpValue.length < 6) return;
         setLoading(true);
         try {
             const res = await fetch('/api/auth/verify-otp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone, otp })
+                body: JSON.stringify({ phone, otp: otpValue })
             });
             const data = await res.json();
             if (data.success) {
@@ -72,12 +84,18 @@ export default function AccountPage() {
                 window.location.reload();
             } else {
                 toast.error(data.error || 'Invalid OTP');
+                setOtp(''); // clear on fail to easily try again
             }
         } catch {
             toast.error('Network error');
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleVerifyOTP = async (e: React.FormEvent) => {
+        e.preventDefault();
+        handleVerify(otp);
     };
 
     if (loading) {
@@ -137,12 +155,33 @@ export default function AccountPage() {
                                 <input
                                     type="text"
                                     value={otp}
-                                    onChange={e => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                    onChange={e => {
+                                        const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+                                        setOtp(val);
+                                        if (val.length === 6) {
+                                            handleVerify(val);
+                                        }
+                                    }}
                                     placeholder="Enter 6-digit OTP"
                                     className="input text-center tracking-[0.5em] font-bold text-lg"
                                     autoFocus
                                 />
                             </div>
+
+                            <div className="text-center text-sm font-medium mt-2">
+                                {countdown > 0 ? (
+                                    <span className="text-gray-500">Resend OTP in {countdown}s</span>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={() => handleSendOTP()}
+                                        className="text-[#C41E3A] hover:underline"
+                                    >
+                                        Resend OTP
+                                    </button>
+                                )}
+                            </div>
+
                             {devOtp && (
                                 <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl text-center text-sm">
                                     <span className="text-blue-700 font-semibold">Dev Mode:</span> Your OTP is <b className="tracking-widest">{devOtp}</b>
