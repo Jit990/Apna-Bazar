@@ -6,6 +6,7 @@ import { ShoppingCart, Heart, Star } from 'lucide-react';
 import { cn, formatPrice, calculateDiscount } from '@/lib/utils';
 import type { Product } from '@/types';
 import { useState } from 'react';
+import { useCart } from '@/context/CartContext';
 
 interface ProductCardProps {
     product: Product;
@@ -22,6 +23,7 @@ export function ProductCard({
     isWishlisted = false,
     className,
 }: ProductCardProps) {
+    const cart = useCart();
     const [quantity, setQuantity] = useState(0);
     const [wishlisted, setWishlisted] = useState(isWishlisted);
 
@@ -33,25 +35,26 @@ export function ProductCard({
     const handleAdd = () => {
         const newQty = 1;
         setQuantity(newQty);
-        onAddToCart?.(product, newQty);
+        (onAddToCart ?? cart.addToCart)(product, newQty);
     };
 
     const handleIncrease = () => {
         if (quantity >= product.stock_quantity) return;
         const newQty = quantity + 1;
         setQuantity(newQty);
-        onAddToCart?.(product, newQty);
+        (onAddToCart ?? cart.addToCart)(product, newQty);
     };
 
     const handleDecrease = () => {
         if (quantity <= 1) {
             setQuantity(0);
-            onAddToCart?.(product, 0);
+            if (onAddToCart) onAddToCart(product, 0);
+            else cart.updateQuantity(product.id, 0);
             return;
         }
         const newQty = quantity - 1;
         setQuantity(newQty);
-        onAddToCart?.(product, newQty);
+        (onAddToCart ?? cart.addToCart)(product, newQty);
     };
 
     const handleWishlist = (e: React.MouseEvent) => {
@@ -77,8 +80,8 @@ export function ProductCard({
                             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                         />
                     ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center">
-                            <ShoppingCart size={32} className="text-gray-300" />
+                        <div className="w-full h-full bg-gradient-to-br from-emerald-50 to-orange-50 flex items-center justify-center">
+                        <ShoppingCart size={32} className="text-emerald-300" />
                         </div>
                     )}
                 </Link>

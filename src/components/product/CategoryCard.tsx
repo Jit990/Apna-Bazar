@@ -20,13 +20,13 @@ export function CategoryCard({ category, className }: CategoryCardProps) {
         <Link
             href={`/categories/${category.slug}`}
             className={cn(
-                'flex flex-col items-center gap-2 py-3 px-1 rounded-2xl transition-all duration-200 hover:scale-105 active:scale-95 group',
+                'flex flex-col items-center gap-2 py-3 px-1 rounded-2xl transition-all duration-200 hover:-translate-y-1 active:scale-95 group',
                 className
             )}
             aria-label={`Browse ${category.name}`}
         >
             {/* Icon container */}
-            <div className="w-16 h-16 rounded-2xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-center overflow-hidden shadow-sm group-hover:bg-emerald-100 transition-colors">
+            <div className="category-icon w-16 h-16 rounded-2xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-center overflow-hidden shadow-sm group-hover:bg-emerald-100 transition-colors">
                 {category.image_url ? (
                     <Image
                         src={category.image_url}

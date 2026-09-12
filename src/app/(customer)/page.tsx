@@ -1,32 +1,25 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ChevronRight, Grid3X3 } from 'lucide-react';
+import { ArrowRight, ChevronRight, Clock3, Grid3X3, Sparkles, Truck } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { ProductCard } from '@/components/product/ProductCard';
+import { CategoryCard } from '@/components/product/CategoryCard';
 import type { Product, Category } from '@/types';
 
 export const metadata: Metadata = {
-    title: 'Apna Bazar | CYBER-SENTINEL',
-    description: 'Advanced Forensic Commerce System',
+    title: 'Fresh picks, delivered fast | Apna Bazar',
+    description: 'Everyday essentials and delightful finds delivered in minutes.',
 };
 
 async function getData() {
     try {
         const supabase = await createClient();
         const [categoriesRes, bestsellersRes] = await Promise.all([
-            supabase
-                .from('categories')
-                .select('id, name, slug, image_url, is_active, display_order')
-                .eq('is_active', true)
-                .is('parent_id', null)
-                .order('display_order', { ascending: true })
-                .limit(20),
-            supabase
-                .from('products')
+            supabase.from('categories').select('id, name, slug, image_url, is_active, display_order')
+                .eq('is_active', true).is('parent_id', null).order('display_order', { ascending: true }).limit(12),
+            supabase.from('products')
                 .select('*, category:categories!products_category_id_fkey(id,name,slug), images:product_images(id,url,alt_text,display_order,is_primary), variants:product_variants(id,name,value,price_modifier,stock_quantity,is_active)')
-                .eq('is_active', true)
-                .order('created_at', { ascending: false })
-                .limit(12),
+                .eq('is_active', true).order('created_at', { ascending: false }).limit(12),
         ]);
         return {
             categories: (categoriesRes.data as Category[]) ?? [],
@@ -41,94 +34,81 @@ export default async function HomePage() {
     const { categories, bestsellers } = await getData();
 
     return (
-        <div className="min-h-screen pb-20 font-mono text-[#00ffcc] relative z-10 w-full max-w-md mx-auto sm:max-w-none">
-            {/* Horizontal Category Tab Ribbon */}
-            <div className="sticky top-[138px] lg:top-20 z-30 bg-black/80 backdrop-blur border-b border-[#00ffcc]/30 pt-1 pb-2 shadow-[0_4px_15px_rgba(0,255,204,0.1)]">
-                <div className="flex overflow-x-auto no-scrollbar gap-5 px-4 snap-x">
-                    <Link href="/categories" className="flex flex-col items-center gap-1 min-w-[56px] snap-start group pb-1">
-                        <div className="w-11 h-11 bg-black border border-[#ff00ff]/30 shadow-[0_0_10px_rgba(255,0,255,0.2)] flex items-center justify-center p-2 group-active:scale-95 transition-all">
-                            <Grid3X3 className="text-[#ff00ff]" size={20} />
+        <div className="min-h-screen pb-20">
+            <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+                <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-emerald-900 via-emerald-700 to-orange-500 px-6 py-7 text-white shadow-[0_18px_40px_rgba(26,120,80,0.24)] sm:px-10 sm:py-10">
+                    <div className="absolute -right-10 -top-16 h-56 w-56 rounded-full bg-orange-300/25 blur-2xl" />
+                    <div className="absolute bottom-[-70px] right-24 h-44 w-44 rounded-full bg-emerald-300/20 blur-xl" />
+                    <div className="relative max-w-xl">
+                        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em]">
+                            <Sparkles size={14} className="text-orange-200" /> Your everyday shortcut
                         </div>
-                        <span className="text-[10px] uppercase font-bold text-[#ff00ff] tracking-widest leading-tight">ALL_SYS</span>
-                        <div className="h-0.5 w-[80%] bg-[#ff00ff] mx-auto absolute -bottom-1 shadow-[0_0_5px_#ff00ff]"></div>
-                    </Link>
-                    {categories.slice(0, 10).map((cat) => (
-                        <Link href={`/categories/${cat.slug}`} key={cat.id} className="flex flex-col items-center gap-1 min-w-[56px] snap-start relative group pb-1">
-                            <div className="w-11 h-11 bg-black flex items-center justify-center p-1.5 border border-[#00ffcc]/30 group-active:scale-95 group-hover:border-[#00ffcc] transition-all relative overflow-hidden shadow-[inset_0_0_8px_rgba(0,255,204,0.1)]">
-                                {cat.image_url ? (
-                                    <img src={cat.image_url} alt={cat.name} className="w-full h-full object-contain filter hue-rotate-180 mix-blend-screen opacity-80" />
-                                ) : (
-                                    <span className="text-[10px] font-bold text-[#0066ff] uppercase">{cat.name.substring(0, 2)}</span>
-                                )}
-                            </div>
-                            <span className="text-[9px] font-bold text-[#00ffcc] uppercase leading-tight truncate w-14 text-center tracking-widest">{cat.name}</span>
-                        </Link>
+                        <h1 className="text-4xl font-black leading-[0.95] tracking-tight sm:text-6xl">
+                            Good stuff.<br /><span className="text-orange-200">Right now.</span>
+                        </h1>
+                        <p className="mt-4 max-w-md text-sm leading-6 text-emerald-50 sm:text-base">
+                            Snacks, self-care, home finds and little surprises — picked for your day and at your door in minutes.
+                        </p>
+                        <div className="mt-6 flex flex-wrap gap-3">
+                            <Link href="/categories" className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-emerald-800 shadow-lg transition-transform hover:-translate-y-0.5">
+                                Shop the drop <ArrowRight size={16} />
+                            </Link>
+                            <span className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-3 text-xs font-bold text-white/90">
+                                <Clock3 size={15} /> 18 min delivery
+                            </span>
+                        </div>
+                    </div>
+                    <div className="absolute bottom-5 right-6 hidden rotate-[-8deg] rounded-3xl border border-white/20 bg-white/10 p-4 backdrop-blur sm:block">
+                        <Truck size={64} strokeWidth={1.2} className="text-orange-100" />
+                    </div>
+                </section>
+
+                <section className="mt-8">
+                    <div className="mb-3 flex items-end justify-between">
+                        <div>
+                            <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-500">Explore the aisle</p>
+                            <h2 className="mt-1 text-2xl font-black text-slate-900">Shop by category</h2>
+                        </div>
+                        <Link href="/categories" className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700">See all <ChevronRight size={15} /></Link>
+                    </div>
+                    {categories.length > 0 ? (
+                        <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-8">
+                            {categories.slice(0, 8).map((category) => <CategoryCard key={category.id} category={category} />)}
+                        </div>
+                    ) : (
+                        <div className="rounded-2xl bg-white p-8 text-center text-sm text-slate-400">Categories are loading fresh picks.</div>
+                    )}
+                </section>
+
+                <section className="mt-8">
+                    <div className="mb-3 flex items-end justify-between">
+                        <div>
+                            <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-500">Made for today</p>
+                            <h2 className="mt-1 text-2xl font-black text-slate-900">Fresh picks for you</h2>
+                        </div>
+                        <Link href="/categories" className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700">Browse all <ChevronRight size={15} /></Link>
+                    </div>
+                    {bestsellers.length > 0 ? (
+                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                            {bestsellers.slice(0, 6).map((product) => <ProductCard key={product.id} product={product} />)}
+                        </div>
+                    ) : (
+                        <div className="rounded-2xl border border-dashed border-emerald-200 bg-emerald-50/60 p-10 text-center text-sm text-emerald-700">Fresh picks are arriving soon.</div>
+                    )}
+                </section>
+
+                <section className="mt-8 grid gap-3 sm:grid-cols-3">
+                    {[
+                        ['Free delivery', 'On your first order', 'bg-orange-100 text-orange-900'],
+                        ['Always fresh', 'Quality checked daily', 'bg-emerald-100 text-emerald-900'],
+                        ['Easy returns', 'Zero-hassle support', 'bg-sky-100 text-sky-900'],
+                    ].map(([title, subtitle, styles]) => (
+                        <div key={title} className={`rounded-2xl p-4 ${styles}`}>
+                            <p className="text-sm font-black">{title}</p>
+                            <p className="mt-1 text-xs opacity-75">{subtitle}</p>
+                        </div>
                     ))}
-                </div>
-            </div>
-
-            <main className="lg:max-w-5xl lg:mx-auto">
-                {/* Promo/Festival Banner Grid */}
-                <div className="px-4 mt-6">
-                    <div className="flex justify-between items-center mb-4 border-b border-[#ff00ff]/30 pb-2">
-                        <h2 className="font-mono font-bold text-2xl text-[#00ffcc] italic tracking-tight relative drop-shadow-[0_0_8px_#00ffcc]">
-                            SYSTEM_INIT <br />
-                            <span className="text-3xl font-black not-italic text-white">JANMASHTAMI</span>
-                        </h2>
-                        <div className="w-16 h-16 opacity-80 border border-[#ff00ff] flex items-center justify-center shadow-[0_0_15px_rgba(255,0,255,0.4)] bg-[#ff00ff]/10">
-                            <span className="glitch text-lg">SYS</span>
-                        </div>
-                    </div>
-                    {/* Masonry-Style Promo Box Layout */}
-                    <div className="grid grid-cols-3 gap-2">
-                        <div className="col-span-1 border border-[#00ffcc]/50 bg-black backdrop-blur rounded p-2 aspect-[4/5] flex flex-col items-center justify-between shadow-[0_0_15px_rgba(0,255,204,0.2)] relative group cursor-pointer hover:border-[#00ffcc]">
-                            <div className="text-center mt-2 z-10 w-full bg-black/80 p-1 border border-[#00ffcc]/30">
-                                <h3 className="font-bold text-[#00ffcc] text-[10px] px-1 leading-tight tracking-widest uppercase">POSHAK_DATA</h3>
-                                <div className="mt-2 bg-[#ff00ff]/20 text-[#ff00ff] border border-[#ff00ff] font-bold px-1 py-0.5 text-[9px] inline-block">VAL 349</div>
-                            </div>
-                        </div>
-                        <div className="col-span-2 grid grid-rows-2 gap-2">
-                            <div className="row-span-1 bg-black p-2 flex items-center justify-between shadow-[0_0_10px_rgba(0,102,255,0.2)] border border-[#0066ff]/50 relative overflow-hidden group cursor-pointer hover:border-[#0066ff]">
-                                <div className="z-10 pl-2">
-                                    <h3 className="font-bold text-[#0066ff] text-xs tracking-widest drop-shadow-[0_0_5px_#0066ff]">DECOR_MOD</h3>
-                                    <p className="text-[#0066ff]/70 text-[9px] uppercase tracking-widest">THREAT LVL: LOW</p>
-                                </div>
-                            </div>
-                            <div className="row-span-1 bg-black p-2 flex items-center justify-between shadow-[0_0_10px_rgba(255,0,85,0.2)] border border-[#ff0055]/50 relative overflow-hidden group hover:border-[#ff0055]">
-                                <div className="z-10 pl-2">
-                                    <h3 className="font-bold text-[#ff0055] text-xs tracking-widest drop-shadow-[0_0_5px_#ff0055]">SWEETS_PKG</h3>
-                                    <p className="text-[#ff0055]/70 text-[9px] uppercase tracking-widest">FESTIVE PROTOCOL</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Bestsellers Header */}
-                <div className="px-4 mt-6">
-                    <div className="flex items-center justify-between mb-3 border-b border-[#00ffcc]/30 pb-2">
-                        <h2 className="text-[#00ffcc] font-black text-sm uppercase tracking-widest drop-shadow-[0_0_5px_#00ffcc] flex items-center gap-2">
-                            <span className="text-[#ff00ff] animate-pulse">&gt;&gt;</span> TOP_MODULES
-                        </h2>
-                        <Link href="/products" className="text-[#0066ff] text-[10px] font-bold flex items-center uppercase tracking-widest hover:text-white transition-colors">
-                            EXE_ALL <ChevronRight size={12} />
-                        </Link>
-                    </div>
-                    {/* Horizontal Scroll Bestsellers */}
-                    <div className="flex overflow-x-auto gap-3 pb-4 snap-x scrollbar-none">
-                        {bestsellers.length > 0 ? (
-                            bestsellers.map(product => (
-                                <div key={product.id} className="min-w-[140px] snap-start border border-[#00ffcc]/20 bg-black/80 backdrop-blur p-2 shadow-[0_0_10px_rgba(0,255,204,0.1)] hover:border-[#00ffcc] transition-colors group">
-                                    <ProductCard product={product} />
-                                </div>
-                            ))
-                        ) : (
-                            <div className="text-[#ff0055] text-[10px] py-4 p-4 border border-dashed border-[#ff0055]/50 bg-black/50 w-full text-center tracking-widest uppercase">
-                                STATUS: NO_ACTIVE_MODULES
-                            </div>
-                        )}
-                    </div>
-                </div>
+                </section>
             </main>
         </div>
     );

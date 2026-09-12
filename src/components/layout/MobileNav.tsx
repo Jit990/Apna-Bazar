@@ -19,7 +19,7 @@ export function MobileNav() {
     ];
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 lg:hidden bg-white border-t border-gray-100 pb-safe z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
+        <nav className="customer-mobile-nav fixed bottom-0 left-0 right-0 lg:hidden pb-safe z-50">
             <div className="flex justify-around items-center h-14">
                 {navItems.map((item) => {
                     const Icon = item.icon;
@@ -31,7 +31,7 @@ export function MobileNav() {
                             href={item.href}
                             className={cn(
                                 'flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors relative',
-                                isActive ? 'text-[#1A7850]' : 'text-gray-400 hover:text-gray-600'
+                                isActive ? 'text-emerald-700' : 'text-slate-400 hover:text-slate-600'
                             )}
                         >
                             <div className="relative">
@@ -42,7 +42,7 @@ export function MobileNav() {
                                     </span>
                                 )}
                             </div>
-                            <span className={cn("text-[10px] font-medium leading-none", isActive && "font-bold text-[#1A7850]")}>
+                            <span className={cn("text-[10px] font-medium leading-none", isActive && "font-bold text-emerald-700")}>
                                 {item.label}
                             </span>
                         </Link>

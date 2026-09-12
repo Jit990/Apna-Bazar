@@ -60,11 +60,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const [loaded, setLoaded] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const supabase = createClient();
-
     // Init and listen to auth changes
     useEffect(() => {
         let mounted = true;
+        const supabase = createClient();
 
         const initializeCart = async (authed: boolean) => {
             if (authed) {
