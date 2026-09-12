@@ -78,15 +78,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
         const supabase = createClient();
 
-        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-            setLoaded(true);
-            return () => {
-                mounted = false;
-            };
-        }
-
-        const supabase = createClient();
-
         const initializeCart = async (authed: boolean) => {
             if (authed) {
                 // User logged in: Sync local items first, then fetch DB cart
