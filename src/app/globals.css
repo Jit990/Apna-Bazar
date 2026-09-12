@@ -1,21 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Baloo+2:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
 
---radius-lg: 20px;
---radius-xl: 28px;
---radius-full: 9999px;
-
-/* Typography */
---font-sans: 'Inter',
-system-ui,
-sans-serif;
---font-brand: 'Baloo 2',
-'Inter',
-sans-serif;
-
-/* Transitions */
---transition-fast: 0.15s ease;
---transition: 0.25s ease;
---transition-slow: 0.4s ease;
+:root {
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-brand: 'Baloo 2', 'Inter', sans-serif;
+  --transition-fast: 0.15s ease;
+  --transition: 0.25s ease;
+  --transition-slow: 0.4s ease;
+  --color-text: #17221c;
+  --color-bg: #f8faf9;
+  --color-primary: #1a7850;
+  --color-primary-dark: #145f40;
+  --color-secondary: #f07629;
+  --color-secondary-dark: #d9601b;
 }
 
 /* ============================================================
@@ -87,6 +87,99 @@ body {
 }
 
 @layer components {
+  .admin-shell {
+    background: #07111f;
+    color: #e2e8f0;
+    font-family: var(--font-sans);
+  }
+
+  .admin-shell-glow {
+    background:
+      radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.12), transparent 30rem),
+      radial-gradient(circle at 20% 100%, rgba(14, 165, 233, 0.08), transparent 28rem);
+  }
+
+  .admin-sidebar {
+    background: rgba(8, 20, 35, 0.96);
+    border-right: 1px solid rgba(148, 163, 184, 0.14);
+    box-shadow: 12px 0 40px rgba(2, 8, 23, 0.25);
+  }
+
+  .admin-sidebar-inner {
+    background: linear-gradient(180deg, rgba(15, 35, 53, 0.7), rgba(7, 17, 31, 0.98));
+  }
+
+  .admin-brand {
+    border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+  }
+
+  .admin-brand-mark {
+    background: linear-gradient(135deg, #10b981, #0ea5e9);
+    box-shadow: 0 0 24px rgba(16, 185, 129, 0.32);
+  }
+
+  .admin-icon-badge {
+    display: inline-flex;
+    width: 2.5rem;
+    height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    color: #6ee7b7;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(52, 211, 153, 0.22);
+  }
+
+  .admin-nav-link:hover {
+    color: #d1fae5;
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.18);
+  }
+
+  .admin-nav-link-active {
+    color: #d1fae5;
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.18), rgba(14, 165, 233, 0.08));
+    border: 1px solid rgba(52, 211, 153, 0.28);
+    box-shadow: inset 3px 0 #34d399, 0 8px 20px rgba(2, 8, 23, 0.15);
+  }
+
+  .admin-sidebar-footer {
+    border-top: 1px solid rgba(148, 163, 184, 0.14);
+  }
+
+  .admin-content {
+    min-height: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  .admin-panel {
+    overflow: hidden;
+    border-radius: 1rem;
+    box-shadow: 0 20px 25px -5px rgb(2 8 23 / 0.1);
+    background: rgba(255, 255, 255, 0.045);
+    border-color: rgba(148, 163, 184, 0.14);
+  }
+
+  .admin-table-heading {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    background: rgba(15, 23, 42, 0.35);
+  }
+
+  .admin-table-row {
+    border-bottom: 1px solid;
+    transition: background-color 0.2s ease;
+    border-color: rgba(148, 163, 184, 0.1);
+  }
+
+  .admin-table-row:hover {
+    background: rgba(16, 185, 129, 0.045);
+  }
+
 
   /* ---- Buttons ---- */
   .btn {

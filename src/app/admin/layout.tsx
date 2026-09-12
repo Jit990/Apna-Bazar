@@ -37,11 +37,11 @@ export default async function AdminLayout({
         }
 
         return (
-            <div className="flex h-screen bg-[#050505] overflow-hidden text-[#00f5ff] selection:bg-[#39ff14] selection:text-black font-mono">
-                <div className="fixed inset-0 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at center, rgba(0,245,255,0.03) 0%, transparent 70%)' }}></div>
+            <div className="admin-shell flex h-screen overflow-hidden selection:bg-emerald-200 selection:text-emerald-950">
+                <div className="admin-shell-glow fixed inset-0 pointer-events-none z-0" />
                 <AdminSidebar userRole={profile.role} userName={profile.full_name} />
-                <main className="flex-1 overflow-auto ml-0 lg:ml-64 relative z-10 scrollbar-thin scrollbar-thumb-[#00f5ff]/20">
-                    <div className="p-6">
+                <main className="flex-1 overflow-auto ml-0 lg:ml-64 relative z-10 scrollbar-thin">
+                    <div className="admin-content p-4 sm:p-6 lg:p-8">
                         {children}
                     </div>
                 </main>
@@ -52,4 +52,3 @@ export default async function AdminLayout({
         return <>{children}</>;
     }
 }
-

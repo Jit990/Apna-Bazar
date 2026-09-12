@@ -12,32 +12,32 @@ export default async function AdminOrdersPage() {
         .order('created_at', { ascending: false });
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-7">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-brand font-bold text-white flex items-center gap-2">
-                        <ShoppingBag size={24} className="text-[#C41E3A]" /> Orders
+                    <h1 className="text-3xl font-black text-white flex items-center gap-3">
+                        <span className="admin-icon-badge"><ShoppingBag size={19} /></span> Orders
                     </h1>
                     <p className="text-gray-400 text-sm mt-1">View and manage customer orders.</p>
                 </div>
             </div>
 
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
+            <div className="admin-panel">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm text-gray-300">
-                        <thead className="text-xs uppercase bg-gray-800/50 text-gray-400 border-b border-gray-800">
+                        <thead>
                             <tr>
-                                <th className="px-5 py-4 font-semibold">Order ID</th>
-                                <th className="px-5 py-4 font-semibold">Date</th>
-                                <th className="px-5 py-4 font-semibold">Total</th>
-                                <th className="px-5 py-4 font-semibold">Verification</th>
-                                <th className="px-5 py-4 font-semibold">Fulfillment</th>
-                                <th className="px-5 py-4 text-right font-semibold">Action</th>
+                                <th className="admin-table-heading text-left px-5 py-4">Order ID</th>
+                                <th className="admin-table-heading text-left px-5 py-4">Date</th>
+                                <th className="admin-table-heading text-left px-5 py-4">Total</th>
+                                <th className="admin-table-heading text-left px-5 py-4">Verification</th>
+                                <th className="admin-table-heading text-left px-5 py-4">Fulfillment</th>
+                                <th className="admin-table-heading text-right px-5 py-4">Action</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-800/50">
                             {orders?.map((o) => (
-                                <tr key={o.id} className="hover:bg-gray-800/20 transition-colors">
+                                <tr key={o.id} className="admin-table-row">
                                     <td className="px-5 py-4 text-white font-bold max-w-[120px] truncate">
                                         #{o.order_number}
                                     </td>
