@@ -63,6 +63,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // Init and listen to auth changes
     useEffect(() => {
         let mounted = true;
+
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+            setLoaded(true);
+            return () => {
+                mounted = false;
+            };
+        }
+
         const supabase = createClient();
 
         const initializeCart = async (authed: boolean) => {
