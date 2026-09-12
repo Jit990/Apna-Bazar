@@ -17,9 +17,9 @@ export default function CartPage() {
 
     if (items.length === 0) {
         return (
-            <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-                <div className="w-24 h-24 bg-red-50 rounded-full flex items-center justify-center mb-4">
-                    <ShoppingBag size={48} className="text-[#C41E3A]" />
+            <div className="customer-shell min-h-screen flex flex-col items-center justify-center p-4">
+                <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-[28px] bg-gradient-to-br from-emerald-100 to-orange-100 shadow-[0_12px_28px_rgba(26,120,80,0.15)]">
+                    <ShoppingBag size={48} className="text-emerald-700" />
                 </div>
                 <h1 className="text-xl font-brand font-bold text-gray-900 mb-2">Your cart is empty</h1>
                 <p className="text-gray-500 text-sm text-center mb-6">Looks like you haven&apos;t added anything to your cart yet.</p>
@@ -31,8 +31,8 @@ export default function CartPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-28">
-            <div className="bg-[#C41E3A] px-4 py-4 text-white">
+        <div className="customer-shell min-h-screen pb-28">
+            <div className="bg-gradient-to-r from-emerald-900 to-emerald-700 px-4 py-5 text-white">
                 <h1 className="font-brand font-black text-xl">My Cart ({items.length})</h1>
             </div>
 

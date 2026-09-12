@@ -23,16 +23,20 @@ export default async function CategoriesPage() {
     }
 
     return (
-        <div className="bg-gray-50 min-h-screen">
-            <div className="px-4 py-4">
-                <nav className="flex items-center gap-1 text-xs text-gray-500 mb-4">
+        <div className="customer-shell min-h-screen pb-20">
+            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <nav className="mb-5 flex items-center gap-1 text-xs text-slate-500">
                     <Link href="/" className="hover:text-primary">Home</Link>
                     <ChevronRight size={12} />
                     <span className="text-gray-900 font-medium">Categories</span>
                 </nav>
-                <h1 className="text-xl font-brand font-bold text-gray-900 mb-4">All Categories</h1>
+                <div className="mb-6 rounded-[24px] bg-gradient-to-r from-emerald-900 to-emerald-700 px-5 py-6 text-white shadow-[0_14px_30px_rgba(26,120,80,0.18)]">
+                    <p className="text-[11px] font-black uppercase tracking-[0.2em] text-orange-200">Find your next favorite</p>
+                    <h1 className="mt-1 text-3xl font-black">Shop every aisle</h1>
+                    <p className="mt-1 text-sm text-emerald-100">Fresh essentials and fun finds, organized for faster shopping.</p>
+                </div>
                 {categories.length === 0 ? (
-                    <p className="text-center text-gray-400 py-12">No categories available right now.</p>
+                    <div className="rounded-2xl bg-white p-12 text-center text-slate-400 shadow-sm">No categories available right now.</div>
                 ) : (
                     <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
                         {categories.map((cat) => (

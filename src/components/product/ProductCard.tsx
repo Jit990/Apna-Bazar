@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ShoppingCart, Heart, Star } from 'lucide-react';
 import { cn, formatPrice, calculateDiscount } from '@/lib/utils';
 import type { Product } from '@/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCart } from '@/context/CartContext';
 
 interface ProductCardProps {
@@ -24,13 +24,17 @@ export function ProductCard({
     className,
 }: ProductCardProps) {
     const cart = useCart();
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(() => cart.getItemQuantity(product.id));
     const [wishlisted, setWishlisted] = useState(isWishlisted);
 
     const primaryImage = product.images?.find((i) => i.is_primary) ?? product.images?.[0];
     const discount = calculateDiscount(product.mrp, product.price);
     const isOutOfStock = product.stock_status === 'out_of_stock';
     const isLowStock = product.stock_status === 'low_stock';
+
+    useEffect(() => {
+        setQuantity(cart.getItemQuantity(product.id));
+    }, [cart, product.id]);
 
     const handleAdd = () => {
         const newQty = 1;
@@ -74,7 +78,7 @@ export function ProductCard({
                             alt={primaryImage.alt_text ?? product.name}
                             fill
                             className={cn(
-                                'object-cover transition-transform duration-300 group-hover:scale-105',
+                                'object-contain p-3 transition-transform duration-300 group-hover:scale-110',
                                 isOutOfStock && 'opacity-60'
                             )}
                             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

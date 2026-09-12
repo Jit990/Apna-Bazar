@@ -594,6 +594,7 @@ body {
     radial-gradient(circle at 92% 20%, rgba(52, 211, 153, 0.18), transparent 30rem),
     #f3f8f3;
   color: #102a25;
+  perspective: 1200px;
 }
 
 .customer-frame {
@@ -637,6 +638,30 @@ body {
 
 .customer-shell .product-card-image {
   background: linear-gradient(145deg, #effaf3, #fff5e9);
+}
+
+.customer-shell .product-card-image::after {
+  content: '';
+  position: absolute;
+  inset: 16% 18%;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9), transparent 68%);
+  pointer-events: none;
+  transform: translateZ(-1px);
+}
+
+.customer-shell .product-card-body {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.customer-shell .add-btn {
+  background: linear-gradient(135deg, #f07629, #e35e18);
+  box-shadow: 0 6px 14px rgba(240, 118, 41, 0.28);
+}
+
+.customer-shell .qty-selector {
+  background: linear-gradient(135deg, #1a7850, #12583a);
+  box-shadow: 0 6px 14px rgba(26, 120, 80, 0.22);
 }
 
 .customer-shell .category-icon {
