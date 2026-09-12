@@ -14,35 +14,35 @@ export default async function AdminProductsPage() {
         .order('created_at', { ascending: false });
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-7">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-brand font-bold text-white flex items-center gap-2">
-                        <Package size={24} className="text-[#C41E3A]" /> Products
+                    <h1 className="text-3xl font-black text-white flex items-center gap-3">
+                        <span className="admin-icon-badge"><Package size={19} /></span> Products
                     </h1>
                     <p className="text-gray-400 text-sm mt-1">Manage your catalog, stock, and pricing.</p>
                 </div>
-                <Link href="/admin/products/new" className="btn-primary px-4 py-2 flex items-center gap-2 shadow-lg shadow-red-900/20 text-sm rounded-xl font-semibold">
+                <Link href="/admin/products/new" className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-2.5 flex items-center gap-2 shadow-lg shadow-emerald-950/20 text-sm rounded-xl font-semibold transition-colors">
                     <Plus size={16} /> Add Product
                 </Link>
             </div>
 
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
+            <div className="admin-panel">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm text-gray-300">
-                        <thead className="text-xs uppercase bg-gray-800/50 text-gray-400 border-b border-gray-800">
+                        <thead>
                             <tr>
-                                <th className="px-5 py-4 font-semibold">Product</th>
-                                <th className="px-5 py-4 font-semibold">Category</th>
-                                <th className="px-5 py-4 font-semibold">Price</th>
-                                <th className="px-5 py-4 font-semibold">Stock</th>
-                                <th className="px-5 py-4 font-semibold">Status</th>
-                                <th className="px-5 py-4 text-right font-semibold">Actions</th>
+                                <th className="admin-table-heading text-left px-5 py-4">Product</th>
+                                <th className="admin-table-heading text-left px-5 py-4">Category</th>
+                                <th className="admin-table-heading text-left px-5 py-4">Price</th>
+                                <th className="admin-table-heading text-left px-5 py-4">Stock</th>
+                                <th className="admin-table-heading text-left px-5 py-4">Status</th>
+                                <th className="admin-table-heading text-right px-5 py-4">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-800/50">
                             {products?.map((p) => (
-                                <tr key={p.id} className="hover:bg-gray-800/20 transition-colors">
+                                <tr key={p.id} className="admin-table-row">
                                     <td className="px-5 py-4 flex flex-col">
                                         <span className="font-semibold text-white">{p.name}</span>
                                         <span className="text-[10px] text-gray-500">{p.sku}</span>

@@ -54,21 +54,20 @@ export function AdminSidebar({ userRole = 'admin', userName }: AdminSidebarProps
     };
 
     const renderSidebarContent = () => (
-        <div className="flex flex-col h-full bg-[#0a0a0c] border-r border-[#00f5ff]/20 shadow-[0_0_20px_rgba(0,245,255,0.1)]">
+        <div className="admin-sidebar-inner flex flex-col h-full">
             {/* Logo */}
-            <div className="flex items-center gap-3 px-4 py-5 border-b border-[#00f5ff]/20 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[#00f5ff]/5 opacity-50 animate-pulse"></div>
-                <div className="w-10 h-10 rounded shadow-[0_0_15px_#39ff14] bg-black border border-[#39ff14] flex items-center justify-center flex-shrink-0 z-10">
-                    <span className="text-[#39ff14] font-black text-sm tracking-widest font-mono">SYS</span>
+            <div className="admin-brand flex items-center gap-3 px-5 py-5">
+                <div className="admin-brand-mark w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 z-10">
+                    <span className="text-white font-black text-sm tracking-widest">AB</span>
                 </div>
                 <div className="z-10">
-                    <div className="text-[#00f5ff] font-mono font-black text-lg leading-none tracking-widest uppercase drop-shadow-[0_0_5px_rgba(0,245,255,0.8)]">Root</div>
-                    <div className="text-[#39ff14] text-[10px] font-mono capitalize tracking-widest">{userRole} Access_</div>
+                    <div className="text-white font-black text-lg leading-none tracking-tight">Apna Bazar</div>
+                    <div className="text-emerald-300 text-[10px] font-semibold uppercase tracking-[0.18em] mt-1">{userRole} workspace</div>
                 </div>
             </div>
 
             {/* Nav */}
-            <nav className="flex-1 py-4 overflow-y-auto scrollbar-thin px-2 space-y-1">
+            <nav className="flex-1 py-5 overflow-y-auto scrollbar-thin px-3 space-y-1">
                 {navItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = item.href === '/admin'
@@ -80,36 +79,35 @@ export function AdminSidebar({ userRole = 'admin', userName }: AdminSidebarProps
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                'flex items-center gap-3 px-3 py-2.5 rounded text-sm font-mono transition-all duration-300 relative overflow-hidden group',
+                                'admin-nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 relative overflow-hidden group',
                                 isActive
-                                    ? 'bg-[#00f5ff]/10 text-[#00f5ff] border border-[#00f5ff]/50 shadow-[inset_4px_0_0_#00f5ff]'
-                                    : 'text-gray-400 hover:bg-[#39ff14]/5 hover:text-[#39ff14] border border-transparent'
+                                    ? 'admin-nav-link-active'
+                                    : 'text-slate-400 border border-transparent'
                             )}
                             onClick={() => setMobileOpen(false)}
                         >
-                            {isActive && <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-[#00f5ff] shadow-[0_0_10px_#00f5ff]"></div>}
-                            <Icon size={16} className={cn("transition-transform group-hover:scale-110", isActive && "drop-shadow-[0_0_8px_#00f5ff]")} />
-                            <span className="tracking-widest">{item.label}</span>
+                            <Icon size={17} className={cn("transition-transform group-hover:scale-110", isActive && "text-emerald-300")} />
+                            <span className="font-medium">{item.label}</span>
                         </Link>
                     );
                 })}
             </nav>
 
             {/* User + Logout */}
-            <div className="border-t border-[#00f5ff]/20 p-3 bg-[#0a0a0c]">
-                <div className="flex items-center gap-3 px-3 py-2.5 rounded bg-black border border-[#39ff14]/30 shadow-[inset_0_0_10px_rgba(57,255,20,0.1)] mb-2 relative overflow-hidden cursor-pointer hover:border-[#39ff14]/80 transition-colors">
-                    <div className="w-8 h-8 rounded bg-black border border-[#00f5ff] flex items-center justify-center flex-shrink-0">
-                        <Shield size={14} className="text-[#00f5ff]" />
+            <div className="admin-sidebar-footer p-3">
+                <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 mb-2 relative overflow-hidden cursor-pointer hover:border-emerald-400/40 transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center flex-shrink-0">
+                        <Shield size={14} className="text-emerald-300" />
                     </div>
                     <div className="min-w-0 flex-1">
-                        <div className="text-[#39ff14] text-xs font-mono truncate tracking-wider">{userName ?? 'Admin'}</div>
-                        <div className="text-[#00f5ff] text-[9px] font-mono uppercase tracking-widest opacity-80">{userRole}_</div>
+                        <div className="text-white text-xs font-semibold truncate">{userName ?? 'Admin'}</div>
+                        <div className="text-slate-400 text-[9px] uppercase tracking-widest">{userRole}</div>
                     </div>
                 </div>
                 <button
                     onClick={handleLogout}
                     disabled={loggingOut}
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-mono text-[#ff003c] border border-[#ff003c]/30 hover:bg-[#ff003c]/10 hover:border-[#ff003c]/80 hover:shadow-[0_0_15px_rgba(255,0,60,0.3)] transition-all disabled:opacity-50 tracking-widest uppercase items-center justify-center"
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-rose-300 border border-rose-400/20 hover:bg-rose-400/10 hover:border-rose-400/50 transition-all disabled:opacity-50 uppercase items-center justify-center"
                 >
                     <LogOut size={16} />
                     <span>{loggingOut ? 'Terminating...' : 'Logout Process'}</span>
@@ -127,7 +125,7 @@ export function AdminSidebar({ userRole = 'admin', userName }: AdminSidebarProps
 
             {/* Mobile hamburger */}
             <button
-                className="fixed top-4 left-4 z-50 lg:hidden p-2 bg-gray-900 rounded-xl text-white border border-gray-700"
+                className="fixed top-4 left-4 z-50 lg:hidden p-2 bg-slate-900 rounded-xl text-white border border-white/10 shadow-lg"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label="Toggle admin menu"
             >
@@ -145,7 +143,7 @@ export function AdminSidebar({ userRole = 'admin', userName }: AdminSidebarProps
             {/* Mobile drawer */}
             <aside
                 className={cn(
-                    'fixed top-0 left-0 h-full w-64 z-50 bg-gray-900 border-r border-gray-800 flex flex-col transform transition-transform duration-300 lg:hidden',
+                    'admin-sidebar fixed top-0 left-0 h-full w-64 z-50 flex flex-col transform transition-transform duration-300 lg:hidden',
                     mobileOpen ? 'translate-x-0' : '-translate-x-full'
                 )}
             >
