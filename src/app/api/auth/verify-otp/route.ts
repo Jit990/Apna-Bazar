@@ -24,24 +24,27 @@ export async function POST(request: NextRequest) {
         // 2. Use admin client to find or create the user
         const adminClient = await createAdminClient();
 
-        // Secure deterministic password generation (prevents brute forcing Supabase directly)
+        const pepper = process.env.AUTH_PASSWORD_PEPPER;
+        if (!pepper) {
+            console.error('[verify-otp] AUTH_PASSWORD_PEPPER is not configured');
+            return NextResponse.json({ success: false, error: 'Authentication service is not configured' }, { status: 500 });
+        }
+
         const crypto = await import('crypto');
-        const secret = process.env.NEXTAUTH_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || 'fallback-secret-50212391';
-        const securePassword = crypto.createHmac('sha256', secret).update(cleanPhone).digest('hex').slice(0, 32);
+        const securePassword = crypto.createHmac('sha256', pepper).update(cleanPhone).digest('hex').slice(0, 32);
 
         const phoneWithCountry = `+91${cleanPhone}`;
 
-        // Try to find existing user by phone
-        const { data: existingUsers } = await adminClient.auth.admin.listUsers();
-        const existingUser = existingUsers?.users?.find(
-            (u) => u.phone === phoneWithCountry || u.phone === cleanPhone
-        );
+        const { data: existingProfile } = await adminClient
+            .from('profiles')
+            .select('user_id')
+            .eq('phone', cleanPhone)
+            .maybeSingle();
 
         let userId: string;
 
-        if (existingUser) {
-            userId = existingUser.id;
-            // Update password in case it was changed
+        if (existingProfile?.user_id) {
+            userId = existingProfile.user_id;
             await adminClient.auth.admin.updateUserById(userId, {
                 password: securePassword,
                 phone_confirm: true,
@@ -83,13 +86,13 @@ export async function POST(request: NextRequest) {
         }
 
         // 3. Ensure profile exists for existing users too
-        const { data: existingProfile } = await adminClient
+        const { data: profileRow } = await adminClient
             .from('profiles')
             .select('id')
             .eq('user_id', userId)
-            .single();
+            .maybeSingle();
 
-        if (!existingProfile) {
+        if (!profileRow) {
             await adminClient.from('profiles').upsert({
                 user_id: userId,
                 phone: cleanPhone,

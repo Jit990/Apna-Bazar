@@ -3,8 +3,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { ProductForm } from '@/components/admin/ProductForm';
+import { assertAdminPage } from '@/app/actions/admin';
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
+    await assertAdminPage();
     const { id } = await params;
     const supabase = await createClient();
 

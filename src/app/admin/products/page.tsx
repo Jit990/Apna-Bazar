@@ -4,8 +4,10 @@ import { DeleteProductButton } from './DeleteProductButton';
 
 import { createClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
+import { assertAdminPage } from '@/app/actions/admin';
 
 export default async function AdminProductsPage() {
+    await assertAdminPage();
     const supabase = await createClient();
 
     const { data: products } = await supabase

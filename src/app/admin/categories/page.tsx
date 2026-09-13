@@ -1,9 +1,11 @@
-import { Folders, Plus, Pencil, Trash } from 'lucide-react';
+import { Folders, Plus, Pencil } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { DeleteCategoryButton } from './DeleteCategoryButton';
+import { assertAdminPage } from '@/app/actions/admin';
 
 export default async function AdminCategoriesPage() {
+    await assertAdminPage();
     const supabase = await createClient();
 
     const { data: categories } = await supabase

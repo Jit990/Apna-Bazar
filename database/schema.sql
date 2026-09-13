@@ -458,7 +458,7 @@ CREATE TABLE store_settings (
   favicon_url             TEXT,
   updated_at              TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   -- Enforce single row
-  CONSTRAINT single_row CHECK (id = id)
+  singleton              BOOLEAN NOT NULL DEFAULT TRUE UNIQUE CHECK (singleton)
 );
 
 -- =============================================================
@@ -541,7 +541,7 @@ $$;
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO profiles (user_id, full_name, email, phone)
+  INSERT INTO public.profiles (user_id, full_name, email, phone)
   VALUES (
     NEW.id,
     NEW.raw_user_meta_data ->> 'full_name',
@@ -551,7 +551,7 @@ BEGIN
   ON CONFLICT (user_id) DO NOTHING;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
@@ -616,12 +616,12 @@ ALTER TABLE inventory_movements ENABLE ROW LEVEL SECURITY;
 CREATE OR REPLACE FUNCTION is_admin()
 RETURNS BOOLEAN AS $$
   SELECT EXISTS (
-    SELECT 1 FROM profiles
+    SELECT 1 FROM public.profiles
     WHERE user_id = auth.uid()
     AND role IN ('admin', 'manager', 'staff')
     AND is_active = TRUE
   );
-$$ LANGUAGE SQL SECURITY DEFINER STABLE;
+$$ LANGUAGE SQL SECURITY DEFINER STABLE SET search_path = public;
 
 -- ---- PROFILES RLS ----
 CREATE POLICY "Users can view their own profile"

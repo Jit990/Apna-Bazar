@@ -1,8 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Search, ShoppingBag, User, ChevronDown, Mic, MapPin } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Search, ShoppingBag, User, ChevronDown, Mic } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 

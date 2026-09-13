@@ -1,10 +1,10 @@
 -- Migration: Create atomic inventory and usage functions for Checkout
 
--- 1. Atomic stock decrement
 CREATE OR REPLACE FUNCTION decrement_stock(p_product_id UUID, p_quantity INTEGER)
 RETURNS void
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
 BEGIN
     UPDATE products
@@ -17,11 +17,11 @@ BEGIN
 END;
 $$;
 
--- 2. Atomic coupon usage increment
 CREATE OR REPLACE FUNCTION increment_coupon_usage(p_coupon_id UUID)
 RETURNS void
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
 BEGIN
     UPDATE coupons

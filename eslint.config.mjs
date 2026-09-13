@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "android/**",
+    "check-admin.js",
+    "test-admin.js",
+    "test-admin2.js",
   ]),
 ]);
 

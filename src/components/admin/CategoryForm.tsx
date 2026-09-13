@@ -25,7 +25,7 @@ export function CategoryForm({ initialData }: CategoryFormProps) {
     const [description, setDescription] = useState(initialData?.description || '');
     const [isActive, setIsActive] = useState(initialData ? initialData.is_active : true);
 
-    const [imageUrl, setImageUrl] = useState(initialData?.image_url || '');
+    const [imageUrl] = useState(initialData?.image_url || '');
     const [imageFile, setImageFile] = useState<File | null>(null);
 
     // Auto-generate slug from name
@@ -67,8 +67,8 @@ export function CategoryForm({ initialData }: CategoryFormProps) {
             }
 
             router.push('/admin/categories');
-        } catch (error: any) {
-            toast.error(error.message || 'Failed to save category');
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'Failed to save category');
         } finally {
             setLoading(false);
         }

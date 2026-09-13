@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Plus, MapPin, Trash2, Edit2, CheckCircle2, Loader2 } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import type { Address } from '@/types';
 
@@ -18,22 +17,22 @@ export default function AddressesPage() {
     const [submitting, setSubmitting] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
 
-    const fetchAddresses = async () => {
-        setLoading(true);
+    const fetchAddresses = useCallback(async () => {
         try {
             const res = await fetch('/api/addresses');
             const data = await res.json();
             if (data.success) setAddresses(data.data || []);
-        } catch (err) {
+        } catch {
             toast.error('Failed to load addresses');
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
-        fetchAddresses();
-    }, []);
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount for saved addresses
+        void fetchAddresses();
+    }, [fetchAddresses]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -43,13 +42,14 @@ export default function AddressesPage() {
             const method = editingId ? 'PUT' : 'POST';
             const payload = editingId ? { ...formData, id: editingId } : formData;
 
-            // Auto layout state
-            if (!payload.state) payload.state = 'West Bengal';
+            // Auto layout state — create a copy to avoid mutating useState state directly
+            const finalPayload = { ...payload };
+            if (!finalPayload.state) finalPayload.state = 'West Bengal';
 
             const res = await fetch('/api/addresses', {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(finalPayload)
             });
             const data = await res.json();
 

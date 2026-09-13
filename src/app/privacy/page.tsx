@@ -6,7 +6,7 @@ export default function PrivacyPolicyPage() {
 
             <section className="space-y-4 text-gray-300">
                 <p>
-                    Apna Bazar ("we", "our", "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our Progressive Web Application and mobile application.
+                    Apna Bazar (&ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;us&rdquo;) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our Progressive Web Application and mobile application.
                 </p>
 
                 <h2 className="text-xl font-bold text-white mt-8 mb-4">1. Information We Collect</h2>

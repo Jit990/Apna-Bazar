@@ -15,8 +15,8 @@ export function DeleteCategoryButton({ id, name }: { id: string; name: string })
         try {
             await deleteCategory(id);
             toast.success('Category deleted successfully');
-        } catch (error: any) {
-            toast.error(error.message || 'Failed to delete category');
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'Failed to delete category');
         } finally {
             setLoading(false);
         }

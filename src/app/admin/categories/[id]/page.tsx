@@ -3,8 +3,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { CategoryForm } from '@/components/admin/CategoryForm';
+import { assertAdminPage } from '@/app/actions/admin';
 
 export default async function EditCategoryPage({ params }: { params: Promise<{ id: string }> }) {
+    await assertAdminPage();
     const { id } = await params;
     const supabase = await createClient();
 

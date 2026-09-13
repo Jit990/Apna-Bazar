@@ -15,8 +15,8 @@ export function DeleteProductButton({ id, name }: { id: string; name: string }) 
         try {
             await deleteProduct(id);
             toast.success('Product deleted successfully');
-        } catch (error: any) {
-            toast.error(error.message || 'Failed to delete product');
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'Failed to delete product');
         } finally {
             setLoading(false);
         }

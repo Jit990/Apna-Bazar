@@ -1,8 +1,10 @@
 import { Folders, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { CategoryForm } from '@/components/admin/CategoryForm';
+import { assertAdminPage } from '@/app/actions/admin';
 
-export default function NewCategoryPage() {
+export default async function NewCategoryPage() {
+    await assertAdminPage();
     return (
         <div className="space-y-6">
             <div>

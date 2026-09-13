@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main, jit990-polish-admin-dashboard]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: test-anon-key
+      SUPABASE_SERVICE_ROLE_KEY: test-service-role-key
+      NEXT_PUBLIC_RAZORPAY_KEY_ID: rzp_test_dummy
+      RAZORPAY_KEY_SECRET: test-razorpay-secret
+      RAZORPAY_WEBHOOK_SECRET: test-webhook-secret
+      AUTH_PASSWORD_PEPPER: test-auth-pepper
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Secret scan
+        run: |
+          set -euo pipefail
+          if git grep -nE 'sk_live_|rzp_live_[A-Za-z0-9]+|SUPABASE_SERVICE_ROLE_KEY=eyJ|fallback-secret-50212391' -- ':!*.lock' ':!package-lock.json'; then
+            echo "Potential secret material found"
+            exit 1
+          fi
+          echo "Secret scan passed"
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke e2e
+        run: npm run test:e2e
+
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: verify
+    if: ${{ vars.E2E_ENABLED == 'true' }}
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      NEXT_PUBLIC_RAZORPAY_KEY_ID: ${{ secrets.NEXT_PUBLIC_RAZORPAY_KEY_ID }}
+      RAZORPAY_KEY_SECRET: ${{ secrets.RAZORPAY_KEY_SECRET }}
+      RAZORPAY_WEBHOOK_SECRET: ${{ secrets.RAZORPAY_WEBHOOK_SECRET }}
+      AUTH_PASSWORD_PEPPER: ${{ secrets.AUTH_PASSWORD_PEPPER }}
+      OTP_CONSOLE_MODE: 'true'
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      CI: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e

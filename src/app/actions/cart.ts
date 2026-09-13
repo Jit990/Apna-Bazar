@@ -35,8 +35,13 @@ export async function getDbCart() {
     return items || [];
 }
 
+interface LocalCartItem {
+    product_id: string;
+    quantity: number;
+}
+
 // Sync local items to DB
-export async function syncLocalToDbCart(localItems: any[]) {
+export async function syncLocalToDbCart(localItems: LocalCartItem[]) {
     if (!localItems || localItems.length === 0) return { success: true };
 
     const supabase = await createClient();

@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Critical Path: Login -> Add to Cart -> Checkout', () => {
+    test.skip(!process.env.E2E_FULL, 'Requires live Supabase/Razorpay credentials');
 
     // Generate a random mobile number starting with 9
     const testPhone = `9${Math.floor(100000000 + Math.random() * 900000000)}`;

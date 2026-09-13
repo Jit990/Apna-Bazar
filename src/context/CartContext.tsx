@@ -21,7 +21,7 @@ export interface CartItemLocal {
         stock_status: string;
         image_url?: string;
         brand?: string | null;
-        [key: string]: any;
+        [key: string]: string | number | boolean | null | undefined;
     };
 }
 
@@ -56,8 +56,18 @@ function saveLocalCart(items: CartItemLocal[]) {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-    const [items, setItems] = useState<CartItemLocal[]>([]);
-    const [loaded, setLoaded] = useState(false);
+    const [items, setItems] = useState<CartItemLocal[]>(() => {
+        if (typeof window === 'undefined') return [];
+        const hasSupabaseConfig = Boolean(
+            process.env.NEXT_PUBLIC_SUPABASE_URL &&
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+        );
+        return hasSupabaseConfig ? [] : loadLocalCart();
+    });
+    const [loaded, setLoaded] = useState(() => {
+        if (typeof window === 'undefined') return false;
+        return !(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+    });
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     // Init and listen to auth changes
@@ -69,8 +79,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
         );
 
         if (!hasSupabaseConfig) {
-            setItems(loadLocalCart());
-            setLoaded(true);
             return () => {
                 mounted = false;
             };
@@ -89,21 +97,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 const dbItems = await getDbCart();
                 if (mounted && dbItems) {
                     // map DB items format back to local memory format for consistency
-                    const mapped = dbItems.map((dbItem: any) => ({
-                        product_id: dbItem.product_id,
-                        quantity: dbItem.quantity,
-                        unit_price: dbItem.unit_price,
-                        product: {
-                            id: dbItem.product.id,
-                            name: dbItem.product.name,
-                            slug: dbItem.product.slug,
-                            price: dbItem.product.price,
-                            mrp: dbItem.product.mrp,
-                            stock_quantity: dbItem.product.stock_quantity,
-                            stock_status: dbItem.product.stock_status,
-                            image_url: dbItem.product.product_images?.[0]?.url,
-                        }
-                    }));
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const mapped = dbItems.map((dbItem: any) => {
+                        const prod = Array.isArray(dbItem.product) ? dbItem.product[0] : dbItem.product;
+                        return {
+                            product_id: dbItem.product_id,
+                            quantity: dbItem.quantity,
+                            unit_price: dbItem.unit_price,
+                            product: {
+                                id: prod?.id ?? '',
+                                name: prod?.name ?? '',
+                                slug: prod?.slug ?? '',
+                                price: prod?.price ?? 0,
+                                mrp: prod?.mrp ?? 0,
+                                stock_quantity: prod?.stock_quantity ?? 0,
+                                stock_status: prod?.stock_status ?? 'out_of_stock',
+                                image_url: prod?.product_images?.[0]?.url,
+                            },
+                        };
+                    });
                     setItems(mapped);
                 }
             } else {
@@ -122,7 +134,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
         checkAuth();
 
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
             if (event === 'SIGNED_IN') {
                 setIsLoggedIn(true);
                 initializeCart(true);

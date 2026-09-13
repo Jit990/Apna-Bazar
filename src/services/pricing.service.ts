@@ -14,6 +14,24 @@ export interface PricingConfig {
  * All business logic here is server-side-only invocable.
  * Never trust frontend-computed totals for order creation.
  */
+/**
+ * Overwrite cart unit prices with current catalog prices.
+ * Never trust client-supplied or cart-stored unit_price at checkout.
+ */
+export function withServerCatalogPrices(items: CartItem[]): CartItem[] {
+    return items.map((item) => {
+        const catalogPrice = item.product?.price;
+        if (catalogPrice == null) {
+            throw new Error('Catalog price missing for cart item');
+        }
+        const variantModifier = item.variant?.price_modifier ?? 0;
+        return {
+            ...item,
+            unit_price: Number(catalogPrice) + Number(variantModifier),
+        };
+    });
+}
+
 export function calculatePriceSummary(
     items: CartItem[],
     config: PricingConfig = {
@@ -31,11 +49,11 @@ export function calculatePriceSummary(
         return sum + mrp * item.quantity;
     }, 0);
 
-    // 2. Selling price subtotal (items already discounted)
+    // 2. Selling price subtotal (catalog price + variant modifier)
     const subtotalAtSelling = items.reduce((sum, item) => {
-        const basePrice = item.unit_price;
+        const catalogPrice = item.product?.price ?? item.unit_price;
         const variantModifier = item.variant?.price_modifier ?? 0;
-        const effectivePrice = basePrice + variantModifier;
+        const effectivePrice = catalogPrice + variantModifier;
         return sum + effectivePrice * item.quantity;
     }, 0);
 
@@ -68,7 +86,7 @@ export function calculatePriceSummary(
     const taxAmount = items.reduce((sum, item) => {
         const product = item.product;
         if (!product || !product.tax_percent) return sum;
-        const itemTotal = item.unit_price * item.quantity;
+        const itemTotal = (Number(product.price) + (item.variant?.price_modifier ?? 0)) * item.quantity;
         const itemCouponShare = subtotalAtSelling > 0
             ? (itemTotal / subtotalAtSelling) * couponDiscount
             : 0;

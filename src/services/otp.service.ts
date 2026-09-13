@@ -186,9 +186,9 @@ async function sendViaMSG91(phone: string, otp: string): Promise<OTPResult> {
         });
 
         const rawResult = await response.text();
-        let jsonResult: any = {};
+        let jsonResult: { type?: string; message?: string } = {};
         try {
-            jsonResult = JSON.parse(rawResult);
+            jsonResult = JSON.parse(rawResult) as { type?: string; message?: string };
         } catch { /* ignore non json */ }
 
         if (!response.ok || jsonResult.type === 'error') {
@@ -197,8 +197,9 @@ async function sendViaMSG91(phone: string, otp: string): Promise<OTPResult> {
         }
 
         return { success: true, message: 'OTP sent successfully via SMS' };
-    } catch (e: any) {
-        console.error('[MSG91 Fault]', e.message);
+    } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        console.error('[MSG91 Fault]', msg);
         throw e;
     }
 }

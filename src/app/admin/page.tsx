@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { formatPrice, formatDateTime } from '@/lib/utils';
 import Link from 'next/link';
+import { assertAdminPage } from '@/app/actions/admin';
 
 export const metadata: Metadata = {
     title: 'Dashboard',
@@ -70,6 +71,7 @@ async function getDashboardStats() {
 }
 
 export default async function AdminDashboard() {
+    await assertAdminPage();
     const stats = await getDashboardStats();
 
     const statCards = [
@@ -207,7 +209,7 @@ export default async function AdminDashboard() {
                         <div className="text-rose-200 font-semibold text-sm">Low stock needs attention</div>
                         <div className="text-rose-300/80 text-xs">{stats.lowStockCount} product(s) are low on stock or out of stock.</div>
                     </div>
-                    <Link href="/admin/inventory"                     className="ml-auto text-rose-200 text-xs font-semibold hover:underline">
+                    <Link href="/admin/inventory" className="ml-auto text-rose-200 text-xs font-semibold hover:underline">
                         View →
                     </Link>
                 </div>

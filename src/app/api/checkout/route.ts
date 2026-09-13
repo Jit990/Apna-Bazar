@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { checkoutSchema } from '@/lib/validations';
-import { calculatePriceSummary, validateCoupon } from '@/services/pricing.service';
+import { calculatePriceSummary, validateCoupon, withServerCatalogPrices } from '@/services/pricing.service';
 import { createRazorpayOrder } from '@/services/payment.service';
 import { notifyOrderConfirmed } from '@/services/notification.service';
 import type { ApiResponse, CartItem, Coupon } from '@/types';
@@ -62,12 +62,19 @@ export async function POST(request: NextRequest) {
             return NextResponse.json<ApiResponse>({ success: false, error: 'Your cart is empty' }, { status: 400 });
         }
 
-        const cartItems = cart.items as unknown as CartItem[];
+        let cartItems = cart.items as unknown as CartItem[];
+        try {
+            cartItems = withServerCatalogPrices(cartItems);
+        } catch {
+            return NextResponse.json<ApiResponse>({ success: false, error: 'Your cart contains an unavailable product' }, { status: 400 });
+        }
 
         // 5. Validate stock for every item (prevent oversell)
         for (const item of cartItems) {
             const product = item.product;
-            if (!product) continue;
+            if (!product) {
+                return NextResponse.json<ApiResponse>({ success: false, error: 'Your cart contains an unavailable product' }, { status: 400 });
+            }
             if (product.stock_status === 'out_of_stock') {
                 return NextResponse.json<ApiResponse>(
                     { success: false, error: `"${product.name}" is out of stock` },
@@ -98,7 +105,9 @@ export async function POST(request: NextRequest) {
             return NextResponse.json<ApiResponse>({ success: false, error: 'Cash on Delivery is not available.' }, { status: 400 });
         }
 
-        // 7. Validate coupon if provided
+        const sellingSubtotal = cartItems.reduce((sum, item) => sum + item.unit_price * item.quantity, 0);
+
+        // 7. Validate coupon if provided (against server-calculated subtotal)
         let coupon: Coupon | null = null;
         if (coupon_code) {
             const { data: couponData } = await supabase
@@ -113,7 +122,7 @@ export async function POST(request: NextRequest) {
                 .eq('coupon_id', couponData?.id)
                 .eq('user_id', user.id);
 
-            const result = validateCoupon(couponData as Coupon | null, 0, usageData?.length ?? 0);
+            const result = validateCoupon(couponData as Coupon | null, sellingSubtotal, usageData?.length ?? 0);
             if (!result.valid) {
                 return NextResponse.json<ApiResponse>({ success: false, error: result.error }, { status: 400 });
             }
@@ -208,21 +217,34 @@ export async function POST(request: NextRequest) {
 
         await adminSupa.from('order_items').insert(orderItems);
 
-        // Deduct inventory atomically via RPC
-        for (const item of cartItems) {
-            // Atomic decrement using SQL function (prevents race conditions / overselling)
-            await adminSupa.rpc('decrement_stock', {
-                p_product_id: item.product_id,
-                p_quantity: item.quantity,
-            }).throwOnError();
+        const stockItems = cartItems.map((item) => ({
+            product_id: item.product_id,
+            quantity: item.quantity,
+        }));
 
-            // Log inventory movement
+        const { error: stockError } = await adminSupa.rpc('checkout_deduct_stock', {
+            p_items: stockItems,
+        });
+
+        if (stockError) {
+            await adminSupa.from('orders').update({
+                status: 'cancelled',
+                payment_status: 'failed',
+            }).eq('id', order.id);
+            console.error('[Checkout] Stock deduction failed:', stockError);
+            return NextResponse.json<ApiResponse>(
+                { success: false, error: 'Insufficient stock. Please update your cart and try again.' },
+                { status: 409 }
+            );
+        }
+
+        for (const item of cartItems) {
             await adminSupa.from('inventory_movements').insert({
                 product_id: item.product_id,
                 variant_id: item.variant_id,
                 type: 'sale',
                 quantity_change: -item.quantity,
-                quantity_after: 0, // will be updated by trigger
+                quantity_after: 0,
                 reference_id: order.id,
                 note: `Sale - Order ${order.order_number}`,
             });

@@ -1,9 +1,10 @@
 import { ShoppingBag } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { formatPrice, formatDateTime } from '@/lib/utils';
-
+import { assertAdminPage } from '@/app/actions/admin';
 
 export default async function AdminOrdersPage() {
+    await assertAdminPage();
     const supabase = await createClient();
 
     const { data: orders } = await supabase

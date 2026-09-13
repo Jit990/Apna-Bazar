@@ -1,7 +1,9 @@
 'use server';
 
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { isStaffRole } from '@/lib/auth/roles';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 // ----------------------------------------------------------------------
 // Auth Check
@@ -11,10 +13,18 @@ export async function requireAdmin() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Unauthorized');
     const { data: profile } = await supabase.from('profiles').select('role, is_active').eq('user_id', user.id).single();
-    if (!profile || !['admin', 'manager', 'staff'].includes(profile.role) || !profile.is_active) {
+    if (!profile || !isStaffRole(profile.role) || !profile.is_active) {
         throw new Error('Forbidden: Admin access required');
     }
     return user;
+}
+
+export async function assertAdminPage() {
+    try {
+        await requireAdmin();
+    } catch {
+        redirect('/admin/login');
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -101,7 +111,24 @@ export async function deleteCategory(id: string) {
 // Products CRUD
 // ----------------------------------------------------------------------
 
-export async function createProduct(data: any, primary_image_url?: string) {
+interface AdminProductPayload {
+    name: string;
+    slug: string;
+    sku: string;
+    category_id: string;
+    price: number;
+    mrp: number;
+    cost_price?: number;
+    discount_percent?: number;
+    stock_quantity: number;
+    low_stock_threshold: number;
+    description?: string;
+    is_active: boolean;
+    stock_status?: string;
+    [key: string]: string | number | boolean | undefined;
+}
+
+export async function createProduct(data: AdminProductPayload, primary_image_url?: string) {
     await requireAdmin();
     const admin = await createAdminClient();
 
@@ -134,7 +161,7 @@ export async function createProduct(data: any, primary_image_url?: string) {
     return { success: true };
 }
 
-export async function updateProduct(id: string, data: any, primary_image_url?: string) {
+export async function updateProduct(id: string, data: AdminProductPayload, primary_image_url?: string) {
     await requireAdmin();
     const admin = await createAdminClient();
 

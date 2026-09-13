@@ -3,7 +3,6 @@
 import { CartProvider } from '@/context/CartContext';
 import { Header } from '@/components/layout/Header';
 import { MobileNav } from '@/components/layout/MobileNav';
-import { useCart } from '@/context/CartContext';
 
 function LayoutInner({ children }: { children: React.ReactNode }) {
     return (

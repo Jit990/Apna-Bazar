@@ -1,8 +1,10 @@
 import { Package, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { ProductForm } from '@/components/admin/ProductForm';
+import { assertAdminPage } from '@/app/actions/admin';
 
-export default function NewProductPage() {
+export default async function NewProductPage() {
+    await assertAdminPage();
     return (
         <div className="space-y-6">
             <div>
