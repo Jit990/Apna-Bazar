@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-labelledby="title desc">
+  <title id="title">Apna Bazar logo</title>
+  <desc id="desc">A warm crimson shopping-bag mark with 'Apna Bazar' wordmark in Baloo-inspired rounded script and orange accent.</desc>
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1">
+      <stop offset="0" stop-color="#C41E3A"/>
+      <stop offset="1" stop-color="#E87D2B"/>
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Shopping bag emblem -->
+  <g transform="translate(80,60)" filter="url(#shadow)">
+    <rect x="0" y="0" width="200" height="160" rx="28" fill="url(#g1)"/>
+    <path d="M54 26a46 46 0 0 1 92 0" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" transform="translate(4,6)"/>
+    <rect x="60" y="66" width="80" height="12" rx="6" fill="rgba(255,255,255,0.12)"/>
+    <circle cx="34" cy="34" r="6" fill="rgba(255,255,255,0.18)"/>
+    <circle cx="166" cy="34" r="6" fill="rgba(255,255,255,0.18)"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(320,150)">
+    <text x="0" y="0" font-family="Baloo, 'Segoe UI', Inter, sans-serif" font-size="72" font-weight="700" fill="#1F1F1F">
+      Apna
+    </text>
+    <text x="0" y="84" font-family="Inter, sans-serif" font-size="48" font-weight="600" fill="#1F1F1F" opacity="0.9">
+      Bazar
+    </text>
+    <rect x="240" y="-10" width="260" height="48" rx="10" fill="url(#g1)" />
+    <text x="260" y="26" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#fff">Han Rishta, Han Ehsaas</text>
+  </g>
+</svg>
