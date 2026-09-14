@@ -36,38 +36,37 @@ export default async function HomePage() {
     return (
         <div className="min-h-screen pb-20">
             <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
-                <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-emerald-900 via-emerald-700 to-orange-500 px-6 py-7 text-white shadow-[0_18px_40px_rgba(26,120,80,0.24)] sm:px-10 sm:py-10">
-                    <div className="absolute -right-10 -top-16 h-56 w-56 rounded-full bg-orange-300/25 blur-2xl" />
-                    <div className="absolute bottom-[-70px] right-24 h-44 w-44 rounded-full bg-emerald-300/20 blur-xl" />
+                <section className="quick-banner relative overflow-hidden rounded-2xl px-5 py-5 text-white shadow-[0_14px_30px_rgba(26,120,80,0.18)] sm:px-8 sm:py-7">
+                    <div className="absolute -right-8 -top-14 h-48 w-48 rounded-full bg-orange-300/25 blur-2xl" />
                     <div className="relative max-w-xl">
-                        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em]">
-                            <Sparkles size={14} className="text-orange-200" /> Your everyday shortcut
+                        <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.16em]">
+                            <Sparkles size={12} className="text-orange-200" /> Fresh deals, delivered fast
                         </div>
-                        <h1 className="text-4xl font-black leading-[0.95] tracking-tight sm:text-6xl">
-                            Good stuff.<br /><span className="text-orange-200">Right now.</span>
+                        <h1 className="text-3xl font-black leading-tight tracking-tight sm:text-5xl">
+                            Groceries at your door<br /><span className="text-orange-200">in 18 minutes.</span>
                         </h1>
-                        <p className="mt-4 max-w-md text-sm leading-6 text-emerald-50 sm:text-base">
-                            Snacks, self-care, home finds and little surprises — picked for your day and at your door in minutes.
+                        <p className="mt-2 max-w-md text-xs leading-5 text-emerald-50 sm:text-sm">
+                            Daily essentials, snacks, personal care and more — picked for your day.
                         </p>
-                        <div className="mt-6 flex flex-wrap gap-3">
-                            <Link href="/categories" className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-emerald-800 shadow-lg transition-transform hover:-translate-y-0.5">
-                                Shop the drop <ArrowRight size={16} />
+                        <div className="mt-4 flex flex-wrap gap-2">
+                            <Link href="/categories" className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-black text-emerald-800 shadow-lg">
+                                Shop now <ArrowRight size={14} />
                             </Link>
-                            <span className="inline-flex items-center gap-2 rounded-full border border-white/25 px-4 py-3 text-xs font-bold text-white/90">
-                                <Clock3 size={15} /> 18 min delivery
+                            <span className="inline-flex items-center gap-2 rounded-xl border border-white/25 px-3 py-2.5 text-[11px] font-bold text-white/90">
+                                <Clock3 size={14} /> Live delivery
                             </span>
                         </div>
                     </div>
-                    <div className="absolute bottom-5 right-6 hidden rotate-[-8deg] rounded-3xl border border-white/20 bg-white/10 p-4 backdrop-blur sm:block">
-                        <Truck size={64} strokeWidth={1.2} className="text-orange-100" />
+                    <div className="absolute bottom-4 right-8 hidden rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur sm:block">
+                        <Truck size={52} strokeWidth={1.2} className="text-orange-100" />
                     </div>
                 </section>
 
-                <section className="mt-8">
+                <section className="mt-7">
                     <div className="mb-3 flex items-end justify-between">
                         <div>
-                            <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-500">Explore the aisle</p>
-                            <h2 className="mt-1 text-2xl font-black text-slate-900">Shop by category</h2>
+                            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-orange-500">Quick browse</p>
+                            <h2 className="mt-1 text-xl font-black text-slate-900 sm:text-2xl">Shop essentials</h2>
                         </div>
                         <Link href="/categories" className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700">See all <ChevronRight size={15} /></Link>
                     </div>
@@ -80,11 +79,11 @@ export default async function HomePage() {
                     )}
                 </section>
 
-                <section className="mt-8">
+                <section className="mt-7">
                     <div className="mb-3 flex items-end justify-between">
                         <div>
-                            <p className="text-xs font-black uppercase tracking-[0.18em] text-orange-500">Made for today</p>
-                            <h2 className="mt-1 text-2xl font-black text-slate-900">Fresh picks for you</h2>
+                            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-orange-500">Picked for you</p>
+                            <h2 className="mt-1 text-xl font-black text-slate-900 sm:text-2xl">Fresh picks</h2>
                         </div>
                         <Link href="/categories" className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700">Browse all <ChevronRight size={15} /></Link>
                     </div>
