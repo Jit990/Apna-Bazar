@@ -1,44 +1,18 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Baloo_2, Share_Tech_Mono, Fira_Code } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'sonner';
-import { MatrixCanvas } from '@/components/MatrixCanvas';
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
-const baloo2 = Baloo_2({
-  subsets: ['latin'],
-  variable: '--font-baloo',
-  weight: ['400', '500', '600', '700', '800'],
-  display: 'swap',
-});
-
-const shareTechMono = Share_Tech_Mono({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-mono',
-});
-
-const firaCode = Fira_Code({
-  subsets: ['latin'],
-  variable: '--font-code',
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'),
   title: {
-    default: 'CYBER-SENTINEL | Apna Bazar',
-    template: '%s | SYS.ACTIVE',
+    default: 'Apna Bazar – Groceries & essentials delivered in minutes',
+    template: '%s | Apna Bazar',
   },
-  description: 'Advanced Quick-Commerce Forensic Logging System',
+  description: 'Your neighbourhood quick-commerce store. Fresh groceries, daily essentials & more delivered in minutes. Best prices, guaranteed freshness.',
 };
 
 export const viewport: Viewport = {
-  themeColor: '#00ffcc',
+  themeColor: '#0D6B3D',
   width: 'device-width',
   initialScale: 1,
 };
@@ -49,11 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${shareTechMono.variable} ${firaCode.variable}`}>
-      <body className="font-mono text-[#00ffcc] antialiased min-h-[100dvh] overflow-x-hidden flex flex-col bg-[#050505]">
-        <MatrixCanvas />
-        <div className="fixed inset-0 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at center, rgba(0,245,255,0.03) 0%, transparent 70%)' }}></div>
-
+    <html lang="en">
+      <body className="font-sans text-gray-900 antialiased min-h-[100dvh] overflow-x-hidden flex flex-col bg-[#F4F5F7]">
         <div className="relative z-10 w-full h-full flex flex-col flex-1">
           {children}
         </div>
@@ -62,12 +33,13 @@ export default function RootLayout({
           position="top-center"
           toastOptions={{
             style: {
-              background: 'black',
-              border: '1px solid #00ffcc',
-              color: '#00ffcc',
-              fontFamily: 'var(--font-mono), monospace',
-              borderRadius: '4px',
-              boxShadow: '0 0 15px rgba(0,255,204,0.3)'
+              background: '#ffffff',
+              border: '1px solid #e5e7eb',
+              color: '#1B1B1E',
+              fontFamily: 'var(--font-sans)',
+              borderRadius: '14px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+              padding: '14px 18px',
             },
           }}
         />

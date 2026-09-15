@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Shield, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function AdminLoginPage() {
+function AdminLoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const isUnauthorized = searchParams.get('error') === 'unauthorized';
@@ -53,6 +53,90 @@ export default function AdminLoginPage() {
     };
 
     return (
+        <>
+            {/* Unauthorized alert */}
+            {isUnauthorized && (
+                <div className="bg-red-950/60 border border-red-800 rounded-2xl p-4 mb-4 text-center text-red-300 text-sm">
+                    ⛔ You do not have permission to access this area.
+                </div>
+            )}
+
+            {/* Login form */}
+            <form
+                onSubmit={handleLogin}
+                className="bg-gray-900 rounded-3xl border border-gray-800 p-6 space-y-4 shadow-xl"
+            >
+                <div>
+                    <label htmlFor="admin-email" className="label text-gray-300">Email Address</label>
+                    <div className="relative">
+                        <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
+                        <input
+                            id="admin-email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="admin@apnabazar.in"
+                            className="input bg-gray-800 border-gray-700 text-white placeholder-gray-500 pl-10 focus:ring-[#C41E3A]"
+                            required
+                            autoComplete="username"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <label htmlFor="admin-password" className="label text-gray-300">Password</label>
+                    <div className="relative">
+                        <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
+                        <input
+                            id="admin-password"
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Your admin password"
+                            className="input bg-gray-800 border-gray-700 text-white placeholder-gray-500 pl-10 pr-10 focus:ring-[#C41E3A]"
+                            required
+                            autoComplete="current-password"
+                        />
+                        <button
+                            type="button"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                            onClick={() => setShowPassword(!showPassword)}
+                            aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        >
+                            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        </button>
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    disabled={loading || !email || !password}
+                    className="btn-primary w-full btn-lg mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {loading ? (
+                        <span className="flex items-center gap-2">
+                            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            Signing in...
+                        </span>
+                    ) : (
+                        'Sign In to Admin Panel'
+                    )}
+                </button>
+            </form>
+        </>
+    );
+}
+
+function LoginFallback() {
+    return (
+        <div className="bg-gray-900 rounded-3xl border border-gray-800 p-6 flex items-center justify-center min-h-[300px]">
+            <div className="w-8 h-8 border-4 border-gray-700 border-t-[#C41E3A] rounded-full animate-spin" />
+        </div>
+    );
+}
+
+export default function AdminLoginPage() {
+    return (
         <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 {/* Logo */}
@@ -64,75 +148,9 @@ export default function AdminLoginPage() {
                     <p className="text-gray-400 text-sm mt-1">Apna Bazar — Owner & Admin Access Only</p>
                 </div>
 
-                {/* Unauthorized alert */}
-                {isUnauthorized && (
-                    <div className="bg-red-950/60 border border-red-800 rounded-2xl p-4 mb-4 text-center text-red-300 text-sm">
-                        ⛔ You do not have permission to access this area.
-                    </div>
-                )}
-
-                {/* Login form */}
-                <form
-                    onSubmit={handleLogin}
-                    className="bg-gray-900 rounded-3xl border border-gray-800 p-6 space-y-4 shadow-xl"
-                >
-                    <div>
-                        <label htmlFor="admin-email" className="label text-gray-300">Email Address</label>
-                        <div className="relative">
-                            <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
-                            <input
-                                id="admin-email"
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="admin@apnabazar.in"
-                                className="input bg-gray-800 border-gray-700 text-white placeholder-gray-500 pl-10 focus:ring-[#C41E3A]"
-                                required
-                                autoComplete="username"
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label htmlFor="admin-password" className="label text-gray-300">Password</label>
-                        <div className="relative">
-                            <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
-                            <input
-                                id="admin-password"
-                                type={showPassword ? 'text' : 'password'}
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Your admin password"
-                                className="input bg-gray-800 border-gray-700 text-white placeholder-gray-500 pl-10 pr-10 focus:ring-[#C41E3A]"
-                                required
-                                autoComplete="current-password"
-                            />
-                            <button
-                                type="button"
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
-                                onClick={() => setShowPassword(!showPassword)}
-                                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                            >
-                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                            </button>
-                        </div>
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading || !email || !password}
-                        className="btn-primary w-full btn-lg mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {loading ? (
-                            <span className="flex items-center gap-2">
-                                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                Signing in...
-                            </span>
-                        ) : (
-                            'Sign In to Admin Panel'
-                        )}
-                    </button>
-                </form>
+                <Suspense fallback={<LoginFallback />}>
+                    <AdminLoginForm />
+                </Suspense>
 
                 <p className="text-center text-gray-600 text-xs mt-4">
                     This area is restricted to authorized administrators only.

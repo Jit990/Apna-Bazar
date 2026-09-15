@@ -1,21 +1,78 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Baloo+2:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Poppins:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+/* ============================================================
+   APNA BAZAR – Blinkit / Zepto Inspired Design System
+   ============================================================ */
 :root {
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  /* Brand – Blinkit-inspired yellow + green */
+  --brand-primary: #0D6B3D;
+  --brand-primary-dark: #0A5530;
+  --brand-primary-light: #E8F5EE;
+  --brand-secondary: #F8E71C;
+  --brand-secondary-dark: #E5D51A;
+  --brand-secondary-light: #FFFDE7;
+  --brand-accent: #E74C3C;
+  --brand-accent-light: #FFF0EE;
+
+  /* Semantic */
+  --color-success: #27AE60;
+  --color-warning: #F39C12;
+  --color-error: #E74C3C;
+  --color-info: #3498DB;
+
+  /* Surfaces – ultra-clean light */
+  --surface-bg: #F4F5F7;
+  --surface-card: #FFFFFF;
+  --surface-elevated: #FFFFFF;
+  --surface-hover: #F0F1F3;
+
+  /* Text */
+  --text-primary: #1B1B1E;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+  --text-inverse: #FFFFFF;
+
+  /* Borders */
+  --border-light: #E5E7EB;
+  --border-default: #D1D5DB;
+  --border-focus: #0D6B3D;
+
+  /* Shadows – subtle, clean */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.10);
+  --shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.12);
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.05);
+  --shadow-card-hover: 0 6px 20px rgba(0, 0, 0, 0.10);
+
+  /* Radii – rounder for modern feel */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
   --radius-full: 9999px;
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-brand: 'Baloo 2', 'Inter', sans-serif;
+
+  /* Typography */
+  --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-brand: 'Poppins', 'DM Sans', sans-serif;
+
+  /* Transitions */
   --transition-fast: 0.15s ease;
-  --transition: 0.25s ease;
-  --transition-slow: 0.4s ease;
-  --color-text: #17221c;
-  --color-bg: #f8faf9;
-  --color-primary: #1a7850;
-  --color-primary-dark: #145f40;
-  --color-secondary: #f07629;
-  --color-secondary-dark: #d9601b;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Category pastel palette */
+  --cat-green: #E8F5EE;
+  --cat-yellow: #FFFDE7;
+  --cat-orange: #FFF3E0;
+  --cat-pink: #FCE4EC;
+  --cat-blue: #E3F2FD;
+  --cat-purple: #F3E5F5;
+  --cat-teal: #E0F2F1;
+  --cat-red: #FFEBEE;
 }
 
 /* ============================================================
@@ -31,8 +88,8 @@
 
 html {
   font-family: var(--font-sans);
-  color: var(--color-text);
-  background-color: var(--color-bg);
+  color: var(--text-primary);
+  background-color: var(--surface-bg);
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -58,7 +115,7 @@ body {
     font-family: var(--font-brand);
     font-weight: 700;
     line-height: 1.2;
-    color: var(--color-text);
+    color: var(--text-primary);
   }
 
   a {
@@ -87,6 +144,10 @@ body {
 }
 
 @layer components {
+
+  /* ============================================================
+     ADMIN SHELL STYLES
+     ============================================================ */
   .admin-shell {
     background: #07111f;
     color: #e2e8f0;
@@ -180,191 +241,322 @@ body {
     background: rgba(16, 185, 129, 0.045);
   }
 
+  /* ============================================================
+     CUSTOMER SHELL STYLES
+     ============================================================ */
+  .customer-shell {
+    background: var(--surface-bg);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+  }
 
-  /* ---- Buttons ---- */
+  .customer-frame {
+    background: var(--surface-bg);
+    max-width: 100%;
+  }
+
+  .customer-header {
+    background: var(--surface-card);
+    border-bottom: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .customer-mobile-nav {
+    background: var(--surface-card);
+    border-top: 1px solid var(--border-light);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(18px);
+  }
+
+  /* ============================================================
+     BUTTONS – Blinkit-style solid, bold buttons
+     ============================================================ */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none;
+    @apply inline-flex items-center justify-center gap-2 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none;
+    border-radius: var(--radius-md);
+    padding: 10px 20px;
   }
 
   .btn-primary {
-    background-color: var(--color-primary);
+    background-color: var(--brand-primary);
     color: white;
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-95 shadow-sm hover:shadow-md;
+    @apply inline-flex items-center justify-center gap-2 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.97];
+    border-radius: var(--radius-md);
+    padding: 10px 20px;
+    box-shadow: 0 2px 8px rgba(13, 107, 61, 0.25);
   }
 
   .btn-primary:hover {
-    background-color: var(--color-primary-dark);
+    background-color: var(--brand-primary-dark);
+    box-shadow: 0 4px 14px rgba(13, 107, 61, 0.35);
+    transform: translateY(-1px);
   }
 
   .btn-secondary {
-    background-color: var(--color-secondary);
-    color: white;
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-95 shadow-sm hover:shadow-md;
+    background-color: var(--brand-secondary);
+    color: var(--text-primary);
+    @apply inline-flex items-center justify-center gap-2 font-bold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.97];
+    border-radius: var(--radius-md);
+    padding: 10px 20px;
+    box-shadow: 0 2px 8px rgba(248, 231, 28, 0.3);
   }
 
   .btn-secondary:hover {
-    background-color: var(--color-secondary-dark);
+    background-color: var(--brand-secondary-dark);
   }
 
   .btn-outline {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none border-2 active:scale-95;
+    border: 2px solid var(--brand-primary);
+    color: var(--brand-primary);
+    @apply inline-flex items-center justify-center gap-2 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.97];
+    border-radius: var(--radius-md);
+    padding: 10px 20px;
   }
 
   .btn-outline:hover {
-    background-color: var(--color-primary);
+    background-color: var(--brand-primary);
     color: white;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none hover:bg-gray-100 text-gray-700;
+    @apply inline-flex items-center justify-center gap-2 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none;
+    border-radius: var(--radius-md);
+    padding: 10px 20px;
+    color: var(--text-secondary);
+  }
+
+  .btn-ghost:hover {
+    background-color: var(--surface-hover);
+    color: var(--text-primary);
   }
 
   .btn-sm {
-    @apply px-3 py-2 text-xs rounded-lg;
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    border-radius: var(--radius-sm);
   }
 
   .btn-lg {
-    @apply px-7 py-4 text-base rounded-2xl;
+    padding: 14px 28px;
+    font-size: 1rem;
+    border-radius: var(--radius-lg);
   }
 
   .btn-icon {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none p-2.5 rounded-xl;
+    @apply inline-flex items-center justify-center transition-all duration-200 focus:outline-none focus-visible:ring-2 disabled:opacity-50 disabled:cursor-not-allowed select-none;
+    padding: 10px;
+    border-radius: var(--radius-md);
   }
 
-  /* ---- Cards ---- */
+  /* ============================================================
+     CARDS – cleaner, flatter for modern commerce
+     ============================================================ */
   .card {
-    @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden;
+    background: var(--surface-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
   }
 
   .card-hover {
-    @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 hover:shadow-md hover:-translate-y-0.5;
+    background: var(--surface-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* ---- Product Card ---- */
+  .card-hover:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-3px);
+  }
+
+  /* ============================================================
+     PRODUCT CARD – Blinkit/Zepto clean card
+     ============================================================ */
   .product-card {
-    @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 relative flex flex-col;
+    background: var(--surface-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-card:hover {
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+    transform: translateY(-3px);
+    border-color: var(--brand-primary);
   }
 
   .product-card-image {
-    @apply relative aspect-square overflow-hidden bg-gray-50;
+    @apply relative aspect-square overflow-hidden;
+    background: linear-gradient(135deg, #fafbfc, #f3f4f6);
   }
 
   .product-card-body {
     @apply flex flex-col flex-1 p-3 gap-1;
   }
 
-  /* ---- Badge ---- */
+  /* ============================================================
+     BADGES – Zepto-style bold badges
+     ============================================================ */
   .badge {
-    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold;
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold;
   }
 
   .badge-success {
-    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700;
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold;
+    background: #E8F5EE;
+    color: #0D6B3D;
   }
 
   .badge-warning {
-    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700;
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold;
+    background: #FFF8E1;
+    color: #F57F17;
   }
 
   .badge-error {
-    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700;
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold;
+    background: #FFEBEE;
+    color: #E74C3C;
   }
 
   .badge-info {
-    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700;
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold;
+    background: #E3F2FD;
+    color: #1565C0;
   }
 
   .badge-discount {
-    background-color: var(--color-secondary);
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold;
+    background: #3B82F6;
     color: white;
-    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold;
   }
 
-  /* ---- Input ---- */
+  /* ============================================================
+     INPUT – modern, clean inputs
+     ============================================================ */
   .input {
-    @apply w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-transparent transition-all duration-200;
-    outline-color: var(--color-primary);
+    @apply w-full px-4 py-3 text-sm placeholder-gray-400 focus:outline-none transition-all duration-200;
+    border: 1.5px solid var(--border-light);
+    border-radius: var(--radius-md);
+    background: var(--surface-card);
+    color: var(--text-primary);
   }
 
   .input:focus {
-    box-shadow: 0 0 0 2px var(--color-primary);
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(13, 107, 61, 0.12);
   }
 
   .input-error {
-    @apply border-red-400 focus:ring-red-400;
+    border-color: var(--color-error);
+  }
+
+  .input-error:focus {
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.12);
   }
 
   .label {
-    @apply block text-sm font-medium text-gray-700 mb-1.5;
+    @apply block text-sm font-medium mb-1.5;
+    color: var(--text-primary);
   }
 
-  /* ---- Section ---- */
+  /* ============================================================
+     SECTION – Blinkit-style sections
+     ============================================================ */
   .section {
-    @apply py-8 px-4;
+    @apply py-6 px-4;
   }
 
   .section-title {
-    @apply text-xl font-bold text-gray-900 mb-4 flex items-center gap-2;
     font-family: var(--font-brand);
+    @apply text-lg font-bold mb-1 flex items-center gap-2;
+    color: var(--text-primary);
   }
 
-  /* ---- Container ---- */
+  .section-subtitle {
+    @apply text-sm mb-4;
+    color: var(--text-secondary);
+  }
+
+  /* ============================================================
+     CONTAINER
+     ============================================================ */
   .container-app {
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
-  /* ---- Price Display ---- */
+  /* ============================================================
+     PRICE DISPLAY
+     ============================================================ */
   .price {
-    @apply font-bold text-gray-900;
     font-family: var(--font-brand);
+    @apply font-bold;
+    color: var(--text-primary);
   }
 
   .price-mrp {
-    @apply text-xs text-gray-400 line-through;
+    @apply text-xs line-through;
+    color: var(--text-muted);
   }
 
   .price-discount {
-    @apply text-xs font-semibold text-green-600;
+    @apply text-xs font-bold;
+    color: var(--brand-primary);
   }
 
-  /* ---- Brand gradient ---- */
+  /* ============================================================
+     BRAND GRADIENTS – Bold Blinkit yellow-green
+     ============================================================ */
   .brand-gradient {
-    background: linear-gradient(135deg, #1A7850 0%, #22A06B 50%, #F07629 100%);
+    background: linear-gradient(135deg, #0D6B3D 0%, #27AE60 50%, #F8E71C 100%);
   }
 
   .brand-text-gradient {
-    background: linear-gradient(135deg, #1A7850 0%, #F07629 100%);
+    background: linear-gradient(135deg, #0D6B3D 0%, #F8E71C 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* ---- Primary color utilities ---- */
+  /* ============================================================
+     PRIMARY UTILITIES
+     ============================================================ */
   .text-primary {
-    color: var(--color-primary);
+    color: var(--brand-primary);
   }
 
   .bg-primary {
-    background-color: var(--color-primary);
+    background-color: var(--brand-primary);
   }
 
   .border-primary {
-    border-color: var(--color-primary);
+    border-color: var(--brand-primary);
   }
 
-  /* ---- Skeleton Loader ---- */
+  /* ============================================================
+     SKELETON / SHIMMER
+     ============================================================ */
   .skeleton {
-    @apply animate-pulse bg-gray-200 rounded-lg;
+    @apply animate-pulse rounded-lg;
+    background: #E5E7EB;
   }
 
-  /* ---- Divider ---- */
   .divider {
-    @apply border-t border-gray-100 my-4;
+    @apply my-4;
+    border-top: 1px solid var(--border-light);
   }
 
-  /* ---- No-data state ---- */
+  /* ============================================================
+     EMPTY STATE
+     ============================================================ */
   .empty-state {
     @apply flex flex-col items-center justify-center py-16 px-6 text-center;
   }
@@ -374,37 +566,78 @@ body {
   }
 
   .empty-state-title {
-    @apply text-lg font-semibold text-gray-700 mb-2;
+    @apply text-lg font-semibold mb-2;
+    color: var(--text-primary);
   }
 
   .empty-state-desc {
-    @apply text-sm text-gray-500;
+    @apply text-sm;
+    color: var(--text-secondary);
   }
 
-  /* ---- Mobile bottom nav ---- */
+  /* ============================================================
+     MOBILE BOTTOM NAV – Zepto-style glass bottom nav
+     ============================================================ */
   .mobile-nav {
-    @apply fixed bottom-0 left-0 right-0 w-full bg-white z-40 border-t border-gray-100;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+    @apply fixed bottom-0 left-0 right-0 w-full z-40;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-top: 1px solid var(--border-light);
+    box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.06);
     padding-bottom: env(safe-area-inset-bottom);
   }
 
   .mobile-nav-item {
-    @apply flex flex-col items-center gap-0.5 py-3 px-4 text-xs font-medium text-gray-400 transition-colors duration-200;
+    @apply flex flex-col items-center gap-0.5 py-2.5 px-3 text-[10px] font-semibold transition-all duration-200;
+    color: var(--text-muted);
+  }
+
+  .mobile-nav-item:hover {
+    color: var(--brand-primary);
+  }
+
+  .mobile-nav-item.active {
+    color: var(--brand-primary);
   }
 
   .has-bottom-nav {
     padding-bottom: calc(4rem + env(safe-area-inset-bottom));
   }
 
-  .mobile-nav-item:hover {
-    color: var(--color-primary);
+  /* ============================================================
+     ADD TO CART CONTROLS – Blinkit green buttons
+     ============================================================ */
+  .add-btn {
+    background-color: var(--brand-primary);
+    color: white;
+    @apply h-8 w-8 rounded-lg flex items-center justify-center font-bold text-lg transition-all duration-200 active:scale-90;
+    box-shadow: 0 2px 8px rgba(13, 107, 61, 0.3);
   }
 
-  .mobile-nav-item.active {
-    color: var(--color-primary);
+  .add-btn:hover {
+    background-color: var(--brand-primary-dark);
+    transform: translateY(-1px);
   }
 
-  /* ---- Admin sidebar ---- */
+  .qty-selector {
+    background-color: var(--brand-primary);
+    color: white;
+    @apply flex items-center gap-1 rounded-lg px-1 py-0.5;
+    box-shadow: 0 2px 8px rgba(13, 107, 61, 0.3);
+  }
+
+  .qty-btn {
+    @apply h-6 w-6 rounded-md flex items-center justify-center transition-colors font-bold text-sm;
+  }
+
+  .qty-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  /* ============================================================
+     ADMIN SIDEBAR (component-level override)
+     ============================================================ */
   .admin-sidebar {
     @apply fixed top-0 left-0 h-full w-64 bg-gray-900 z-40 flex flex-col;
   }
@@ -414,33 +647,53 @@ body {
   }
 
   .admin-sidebar-link.active {
-    background-color: var(--color-primary);
+    background-color: var(--brand-primary);
     @apply text-white;
   }
 
-  /* ---- Add to cart button (inline product card) ---- */
-  .add-btn {
-    background-color: var(--color-primary);
-    color: white;
-    @apply h-8 w-8 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-200 active:scale-90 shadow-sm;
+  /* ============================================================
+     SERVICE BADGE STRIP - Blinkit-style feature badges
+     ============================================================ */
+  .service-badge {
+    @apply flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-xs font-semibold;
+    background: var(--surface-card);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+    transition: all 0.25s ease;
   }
 
-  .add-btn:hover {
-    background-color: var(--color-primary-dark);
+  .service-badge:hover {
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
   }
 
-  .qty-selector {
-    background-color: var(--color-primary);
-    color: white;
-    @apply flex items-center gap-1 rounded-full px-1 py-0.5;
+  .service-badge-icon {
+    @apply w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0;
+    background: var(--brand-primary-light);
+    color: var(--brand-primary);
   }
 
-  .qty-btn {
-    @apply h-6 w-6 rounded-full flex items-center justify-center transition-colors font-bold text-sm;
+  /* ============================================================
+     DELIVERY TIMER BADGE – Blinkit signature
+     ============================================================ */
+  .delivery-timer {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold;
+    background: var(--brand-secondary);
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(248, 231, 28, 0.35);
   }
 
-  .qty-btn:hover {
-    background-color: var(--color-primary-dark);
+  /* ============================================================
+     PROMO BANNER – Blinkit-style bright banners
+     ============================================================ */
+  .promo-banner {
+    @apply relative overflow-hidden rounded-2xl;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .promo-banner:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
   }
 }
 
@@ -482,12 +735,12 @@ body {
 }
 
 /* ============================================================
-   Animation Keyframes
+   Animation Keyframes – Modern micro-interactions
    ============================================================ */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
 
   to {
@@ -496,10 +749,22 @@ body {
   }
 }
 
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(24px);
   }
 
   to {
@@ -530,12 +795,70 @@ body {
   }
 }
 
+@keyframes pulse-gentle {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+
+  70% {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes glowPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(248, 231, 28, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(248, 231, 28, 0.6);
+  }
+}
+
 .animate-fade-in {
-  animation: fadeIn 0.3s ease forwards;
+  animation: fadeIn 0.35s ease forwards;
+}
+
+.animate-fade-slide-in {
+  animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .animate-slide-up {
   animation: slideUp 0.4s ease forwards;
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 2s ease-in-out infinite;
 }
 
 .shimmer {
@@ -545,27 +868,22 @@ body {
 }
 
 /* ============================================================
-   Responsive Mobile-first Adjustments
+   Responsive
    ============================================================ */
-
-/* Add bottom padding to main content to account for mobile nav */
 .has-bottom-nav {
   padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
 }
 
-/* Focus visible outline - accessibility */
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--brand-primary);
   outline-offset: 2px;
 }
 
-/* Selection color */
 ::selection {
-  background: rgba(26, 120, 80, 0.15);
-  color: var(--color-primary);
+  background: rgba(13, 107, 61, 0.15);
+  color: var(--brand-primary);
 }
 
-/* Print styles */
 @media print {
   .no-print {
     display: none !important;
@@ -580,96 +898,21 @@ body {
   .has-bottom-nav {
     padding-bottom: 0 !important;
   }
-
-  .desktop-container {
-    max-width: 1280px;
-    margin: 0 auto;
-  }
-}
-
-/* Customer storefront theme */
-.customer-shell {
-  background:
-    radial-gradient(circle at 8% 0%, rgba(251, 146, 60, 0.2), transparent 28rem),
-    radial-gradient(circle at 92% 20%, rgba(52, 211, 153, 0.18), transparent 30rem),
-    #f3f8f3;
-  color: #102a25;
-  perspective: 1200px;
-}
-
-.customer-frame {
-  background: rgba(248, 251, 247, 0.86);
-  box-shadow: 0 0 60px rgba(16, 42, 37, 0.12);
-}
-
-.customer-header {
-  background: linear-gradient(135deg, rgba(224, 247, 236, 0.98), rgba(255, 244, 224, 0.98));
-  border-bottom: 1px solid rgba(26, 120, 80, 0.12);
-  box-shadow: 0 8px 26px rgba(16, 42, 37, 0.08);
-}
-
-.brand-mark {
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border-radius: 11px;
-  background: linear-gradient(135deg, #1a7850, #f07629);
-  box-shadow: 0 5px 14px rgba(240, 118, 41, 0.25);
-}
-
-.customer-mobile-nav {
-  background: rgba(255, 255, 255, 0.94);
-  border-top: 1px solid rgba(26, 120, 80, 0.12);
-  box-shadow: 0 -8px 24px rgba(16, 42, 37, 0.1);
-  backdrop-filter: blur(18px);
-}
-
-.customer-shell .product-card {
-  border-color: rgba(26, 120, 80, 0.1);
-  border-radius: 20px;
-  box-shadow: 0 8px 22px rgba(16, 42, 37, 0.07);
-}
-
-.customer-shell .product-card:hover {
-  border-color: rgba(240, 118, 41, 0.35);
-  box-shadow: 0 14px 28px rgba(16, 42, 37, 0.12);
-}
-
-.customer-shell .product-card-image {
-  background: linear-gradient(145deg, #effaf3, #fff5e9);
-}
-
-.customer-shell .product-card-image::after {
-  content: '';
-  position: absolute;
-  inset: 16% 18%;
-  border-radius: 999px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.9), transparent 68%);
-  pointer-events: none;
-  transform: translateZ(-1px);
-}
-
-.customer-shell .product-card-body {
-  background: rgba(255, 255, 255, 0.78);
-}
-
-.customer-shell .add-btn {
-  background: linear-gradient(135deg, #f07629, #e35e18);
-  box-shadow: 0 6px 14px rgba(240, 118, 41, 0.28);
-}
-
-.customer-shell .qty-selector {
-  background: linear-gradient(135deg, #1a7850, #12583a);
-  box-shadow: 0 6px 14px rgba(26, 120, 80, 0.22);
-}
-
-.customer-shell .category-icon {
-  box-shadow: 0 8px 18px rgba(26, 120, 80, 0.08);
 }
 
 @media (min-width: 640px) {
   .customer-frame {
-    max-width: 1280px;
+    max-width: 100%;
   }
+}
+
+/* Brand mark – Blinkit-style bold logo container */
+.brand-mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0D6B3D, #27AE60);
+  box-shadow: 0 3px 12px rgba(13, 107, 61, 0.35);
 }

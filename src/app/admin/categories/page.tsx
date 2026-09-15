@@ -1,4 +1,4 @@
-import { Folders, Plus, Pencil, Trash } from 'lucide-react';
+import { Folders, Plus, Pencil } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { DeleteCategoryButton } from './DeleteCategoryButton';

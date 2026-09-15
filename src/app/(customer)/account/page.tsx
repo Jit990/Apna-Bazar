@@ -1,278 +1,283 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { User, LogOut, Package, MapPin, Heart, ChevronRight, Settings } from 'lucide-react';
+import {
+    User, MapPin, Package, Heart, HelpCircle, LogOut,
+    ChevronRight, Phone, Shield, Loader2, Sparkles,
+} from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 
+type Profile = {
+    full_name: string | null;
+    phone: string | null;
+    email: string | null;
+    role: string;
+};
+
 export default function AccountPage() {
     const router = useRouter();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
+    const [showLoginModal, setShowLoginModal] = useState(false);
     const [phone, setPhone] = useState('');
     const [otp, setOtp] = useState('');
-    const [step, setStep] = useState(1);
-    const [devOtp, setDevOtp] = useState<string | null>(null);
-    const [profile, setProfile] = useState<{ full_name?: string, phone?: string, email?: string } | null>(null);
-
-    const [countdown, setCountdown] = useState(0);
+    const [step, setStep] = useState<'phone' | 'otp'>('phone');
+    const [authLoading, setAuthLoading] = useState(false);
 
     useEffect(() => {
-        let timer: NodeJS.Timeout;
-        if (countdown > 0) {
-            timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-        }
-        return () => clearTimeout(timer);
-    }, [countdown]);
+        const fetchProfile = async () => {
+            try {
+                const supabase = createClient();
+                const { data: { user } } = await supabase.auth.getUser();
 
-    useEffect(() => {
-        const checkSession = async () => {
-            const supabase = createClient();
-            const { data: { session } } = await supabase.auth.getSession();
-            setIsLoggedIn(!!session);
-
-            if (session) {
-                const { data } = await supabase.from('profiles').select('*').eq('user_id', session.user.id).single();
-                setProfile(data || { phone: session.user.phone });
+                if (user) {
+                    const { data } = await supabase
+                        .from('profiles')
+                        .select('full_name, phone, email, role')
+                        .eq('user_id', user.id)
+                        .single();
+                    setProfile(data as Profile);
+                }
+            } catch {
+                // Not logged in
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
-        checkSession();
+        fetchProfile();
     }, []);
 
-    const handleSendOTP = async (e?: React.FormEvent) => {
-        e?.preventDefault();
-        if (phone.length < 10) return toast.error('Enter valid phone number');
-        if (countdown > 0) return toast.error(`Please wait ${countdown}s before resending.`);
-
-        setLoading(true);
+    const handleSendOtp = async () => {
+        if (phone.length !== 10) {
+            toast.error('Please enter a valid 10-digit mobile number');
+            return;
+        }
+        setAuthLoading(true);
         try {
             const res = await fetch('/api/auth/send-otp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone })
+                body: JSON.stringify({ phone: `+91${phone}` }),
             });
             const data = await res.json();
             if (data.success) {
-                toast.success('OTP sent successfully');
-                setStep(2);
-                setCountdown(60); // 60 second cooldown
-                if (data.data?.devOtp) setDevOtp(data.data.devOtp);
+                setStep('otp');
+                toast.success('OTP sent to your phone');
             } else {
                 toast.error(data.error || 'Failed to send OTP');
             }
         } catch {
-            toast.error('Network error');
+            toast.error('Something went wrong');
         } finally {
-            setLoading(false);
+            setAuthLoading(false);
         }
     };
 
-    const handleVerify = async (otpValue: string) => {
-        if (otpValue.length < 6) return;
-        setLoading(true);
+    const handleVerifyOtp = async () => {
+        if (otp.length !== 6) {
+            toast.error('Please enter a valid 6-digit OTP');
+            return;
+        }
+        setAuthLoading(true);
         try {
             const res = await fetch('/api/auth/verify-otp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone, otp: otpValue })
+                body: JSON.stringify({ phone: `+91${phone}`, otp }),
             });
             const data = await res.json();
             if (data.success) {
-                toast.success('Login successful');
+                toast.success('Logged in successfully!');
                 window.location.reload();
             } else {
                 toast.error(data.error || 'Invalid OTP');
-                setOtp(''); // clear on fail to easily try again
             }
         } catch {
-            toast.error('Network error');
+            toast.error('Verification failed');
         } finally {
-            setLoading(false);
+            setAuthLoading(false);
         }
     };
 
-    const handleVerifyOTP = async (e: React.FormEvent) => {
-        e.preventDefault();
-        handleVerify(otp);
+    const handleLogout = async () => {
+        const supabase = createClient();
+        await supabase.auth.signOut();
+        toast.success('Logged out');
+        window.location.reload();
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center pb-20">
-                <div className="w-8 h-8 rounded-full border-4 border-gray-200 border-t-[#C41E3A] animate-spin" />
+            <div className="min-h-screen flex items-center justify-center">
+                <Loader2 size={28} className="animate-spin text-[var(--brand-primary)]" />
             </div>
         );
     }
 
-    if (!isLoggedIn) {
-        return (
-            <div className="min-h-screen bg-white pb-20">
-                <div className="p-6 pt-12">
-                    <h1 className="text-2xl font-brand font-black text-gray-900 mb-2">Login / Sign Up</h1>
-                    <p className="text-gray-500 mb-8 text-sm">Enter your phone number to continue shopping with Apna Bazar.</p>
+    const menuItems = [
+        { icon: Package, label: 'My Orders', href: '/orders', desc: 'Track & manage your orders', color: '#0D6B3D', bg: '#E8F5EE' },
+        { icon: MapPin, label: 'My Addresses', href: '/addresses', desc: 'Manage delivery addresses', color: '#3B82F6', bg: '#EFF6FF' },
+        { icon: Heart, label: 'Wishlist', href: '/wishlist', desc: 'Your saved items', color: '#E74C3C', bg: '#FFEBEE' },
+        { icon: HelpCircle, label: 'Help & Support', href: '/terms', desc: 'FAQs, complaints & feedback', color: '#F59E0B', bg: '#FFFDE7' },
+        { icon: Shield, label: 'Privacy Policy', href: '/privacy', desc: 'How we protect your data', color: '#8B5CF6', bg: '#F3E5F5' },
+    ];
 
-                    {step === 1 ? (
-                        <form onSubmit={handleSendOTP} className="space-y-4 animate-fade-in">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Mobile Number</label>
-                                <div className="flex bg-gray-50 border border-gray-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-[#C41E3A]/20 focus-within:border-[#C41E3A] transition-all">
-                                    <div className="px-4 py-3.5 bg-gray-100 border-r border-gray-200 text-gray-600 font-semibold text-sm flex items-center">
-                                        +91
-                                    </div>
-                                    <input
-                                        type="tel"
-                                        value={phone}
-                                        onChange={e => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                                        placeholder="10-digit mobile number"
-                                        className="w-full px-4 py-3.5 bg-transparent border-none focus:ring-0 text-gray-900 font-semibold placeholder:font-normal placeholder:text-gray-400"
-                                        autoFocus
-                                    />
-                                </div>
+    return (
+        <div className="min-h-screen bg-[var(--surface-bg)]">
+            {/* Profile Section */}
+            <div className="bg-white border-b border-[var(--border-light)]">
+                <div className="container-app py-6">
+                    {profile ? (
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0D6B3D] to-[#22C55E] flex items-center justify-center flex-shrink-0 shadow-md">
+                                <User size={26} className="text-white" />
                             </div>
-                            <button
-                                type="submit"
-                                disabled={loading || phone.length < 10}
-                                className="w-full btn-primary bg-[#C41E3A] hover:bg-red-700 py-4 font-bold text-base mt-6 shadow-red-900/10 shadow-lg border-2 border-[#C41E3A]"
-                            >
-                                Send OTP
-                            </button>
-                        </form>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                    <h1 className="text-lg font-bold text-gray-900 truncate" style={{ fontFamily: 'var(--font-brand)' }}>
+                                        {profile.full_name || 'Hello there!'}
+                                    </h1>
+                                    <Sparkles size={14} className="text-[#F8E71C] flex-shrink-0" />
+                                </div>
+                                <p className="text-sm text-gray-500 truncate">
+                                    {profile.phone || profile.email || 'Welcome to Apna Bazar'}
+                                </p>
+                            </div>
+                        </div>
                     ) : (
-                        <form onSubmit={handleVerifyOTP} className="space-y-4 animate-fade-in">
-                            <div>
-                                <div className="flex items-center justify-between mb-2">
-                                    <label className="block text-sm font-semibold text-gray-700">Enter OTP</label>
-                                    <button
-                                        type="button"
-                                        onClick={() => setStep(1)}
-                                        className="text-xs text-[#C41E3A] font-semibold hover:underline"
-                                    >
-                                        Change Number
-                                    </button>
-                                </div>
-                                <input
-                                    type="text"
-                                    value={otp}
-                                    onChange={e => {
-                                        const val = e.target.value.replace(/\D/g, '').slice(0, 6);
-                                        setOtp(val);
-                                        if (val.length === 6) {
-                                            handleVerify(val);
-                                        }
-                                    }}
-                                    placeholder="Enter 6-digit OTP"
-                                    className="input text-center tracking-[0.5em] font-bold text-lg"
-                                    autoFocus
-                                />
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+                                <User size={26} className="text-gray-400" />
                             </div>
-
-                            <div className="text-center text-sm font-medium mt-2">
-                                {countdown > 0 ? (
-                                    <span className="text-gray-500">Resend OTP in {countdown}s</span>
-                                ) : (
-                                    <button
-                                        type="button"
-                                        onClick={() => handleSendOTP()}
-                                        className="text-[#C41E3A] hover:underline"
-                                    >
-                                        Resend OTP
-                                    </button>
-                                )}
+                            <div className="flex-1">
+                                <h1 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'var(--font-brand)' }}>
+                                    Welcome to Apna Bazar
+                                </h1>
+                                <p className="text-sm text-gray-500">Sign in to manage your account</p>
                             </div>
-
-                            {devOtp && (
-                                <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl text-center text-sm">
-                                    <span className="text-blue-700 font-semibold">Dev Mode:</span> Your OTP is <b className="tracking-widest">{devOtp}</b>
-                                </div>
-                            )}
                             <button
-                                type="submit"
-                                disabled={loading || otp.length < 6}
-                                className="w-full btn-primary bg-[#C41E3A] hover:bg-red-700 py-4 font-bold text-base mt-6"
+                                onClick={() => setShowLoginModal(true)}
+                                className="btn-primary btn-sm rounded-xl"
                             >
-                                Verify & Login
+                                Login
                             </button>
-                        </form>
+                        </div>
                     )}
                 </div>
             </div>
-        );
-    }
 
-    const handleLogout = async () => {
-        setLoading(true);
-        const supabase = createClient();
-        await supabase.auth.signOut();
-        toast.success('Logged out successfully');
-        setIsLoggedIn(false);
-        window.location.reload();
-    };
+            {/* Menu */}
+            <div className="container-app py-4">
+                <div className="bg-white rounded-2xl border border-[var(--border-light)] overflow-hidden shadow-sm divide-y divide-[var(--border-light)]">
+                    {menuItems.map(({ icon: Icon, label, href, desc, color, bg }) => (
+                        <Link
+                            key={href}
+                            href={href}
+                            className="flex items-center gap-4 px-4 py-3.5 hover:bg-gray-50 transition group"
+                        >
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-200 group-hover:scale-105 group-hover:shadow-sm" style={{ background: bg, color }}>
+                                <Icon size={18} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-semibold text-gray-800">{label}</p>
+                                <p className="text-xs text-gray-400 font-medium">{desc}</p>
+                            </div>
+                            <ChevronRight size={16} className="text-gray-300 group-hover:text-[var(--brand-primary)] group-hover:translate-x-0.5 transition-all" />
+                        </Link>
+                    ))}
+                </div>
 
-    const MENU_ITEMS = [
-        { icon: Package, label: 'My Orders', desc: 'Track, return, or buy again', href: '/orders' },
-        { icon: MapPin, label: 'Addresses', desc: 'Edit home, office addresses', href: '/account' },
-        { icon: Heart, label: 'Wishlist', desc: 'Your saved items', href: '/wishlist' },
-        { icon: Settings, label: 'Settings', desc: 'Update profile details', href: '/account' },
-    ];
-
-    const initials = profile?.full_name
-        ? profile.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
-        : 'AB';
-
-    return (
-        <div className="min-h-screen bg-gray-50 pb-20">
-            <div className="bg-[#1A7850] text-white px-4 pt-6 pb-12 rounded-b-3xl relative overflow-hidden shadow-sm">
-                <div className="relative z-10">
-                    <h1 className="text-2xl font-brand font-black mb-4">My Account</h1>
-                    <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg flex-shrink-0 text-[#1A7850]">
-                            <span className="font-black font-brand text-2xl">{initials}</span>
+                {/* Logout */}
+                {profile && (
+                    <button
+                        onClick={handleLogout}
+                        className="w-full mt-4 bg-white rounded-2xl border border-[var(--border-light)] px-4 py-3.5 flex items-center gap-4 text-red-500 hover:bg-red-50 transition shadow-sm group"
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center group-hover:bg-red-100 transition">
+                            <LogOut size={18} />
                         </div>
-                        <div className="flex-1 overflow-hidden">
-                            <div className="text-xl font-bold truncate">{profile?.full_name || 'Valued Customer'}</div>
-                            <div className="text-emerald-100 text-sm font-medium">{profile?.phone || profile?.email || 'N/A'}</div>
+                        <span className="text-sm font-semibold">Log Out</span>
+                    </button>
+                )}
+            </div>
+
+            {/* Login Modal */}
+            {showLoginModal && (
+                <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in" onClick={() => setShowLoginModal(false)}>
+                    <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md p-6 shadow-xl animate-slide-up" onClick={(e) => e.stopPropagation()}>
+                        <div className="text-center mb-6">
+                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0D6B3D] to-[#22C55E] flex items-center justify-center mx-auto mb-3 shadow-md">
+                                <Phone size={24} className="text-white" />
+                            </div>
+                            <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-brand)' }}>
+                                {step === 'phone' ? 'Enter your number' : 'Verify OTP'}
+                            </h2>
+                            <p className="text-sm text-gray-500 mt-1">
+                                {step === 'phone' ? 'We\'ll send you a verification code' : `Code sent to +91 ${phone}`}
+                            </p>
                         </div>
+
+                        {step === 'phone' ? (
+                            <div>
+                                <div className="relative mb-4">
+                                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-gray-500 font-semibold">+91</span>
+                                    <input
+                                        type="tel"
+                                        maxLength={10}
+                                        value={phone}
+                                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
+                                        placeholder="Enter 10 digit number"
+                                        className="input pl-12"
+                                        autoFocus
+                                    />
+                                </div>
+                                <button
+                                    onClick={handleSendOtp}
+                                    disabled={authLoading || phone.length !== 10}
+                                    className="btn-primary w-full py-3 rounded-xl"
+                                >
+                                    {authLoading ? <Loader2 size={18} className="animate-spin" /> : 'Send OTP'}
+                                </button>
+                            </div>
+                        ) : (
+                            <div>
+                                <input
+                                    type="text"
+                                    maxLength={6}
+                                    value={otp}
+                                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                                    placeholder="Enter 6-digit OTP"
+                                    className="input text-center text-2xl tracking-[0.5em] mb-4 font-bold"
+                                    autoFocus
+                                />
+                                <button
+                                    onClick={handleVerifyOtp}
+                                    disabled={authLoading || otp.length !== 6}
+                                    className="btn-primary w-full py-3 rounded-xl"
+                                >
+                                    {authLoading ? <Loader2 size={18} className="animate-spin" /> : 'Verify & Login'}
+                                </button>
+                                <button
+                                    onClick={() => { setStep('phone'); setOtp(''); }}
+                                    className="w-full text-center text-sm text-gray-500 mt-3 hover:text-[var(--brand-primary)] font-medium"
+                                >
+                                    Change number
+                                </button>
+                            </div>
+                        )}
+
+                        <button
+                            onClick={() => setShowLoginModal(false)}
+                            className="w-full text-center text-sm text-gray-400 mt-4 hover:text-gray-600 font-medium"
+                        >
+                            Cancel
+                        </button>
                     </div>
                 </div>
-                <div className="absolute right-[-20%] bottom-[-20%] opacity-10">
-                    <User size={180} strokeWidth={1} />
-                </div>
-            </div>
-
-            <div className="px-4 -mt-6 relative z-20">
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2 space-y-1">
-                    {MENU_ITEMS.map((item, idx) => {
-                        const Icon = item.icon;
-                        return (
-                            <button
-                                key={idx}
-                                onClick={() => router.push(item.href || '/account')}
-                                className="w-full flex items-center gap-4 p-3 hover:bg-gray-50 rounded-xl transition-colors text-left group"
-                            >
-                                <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-[#1A7850] group-hover:scale-110 transition-transform">
-                                    <Icon size={20} />
-                                </div>
-                                <div className="flex-1">
-                                    <div className="font-semibold text-gray-900">{item.label}</div>
-                                    <div className="text-[11px] text-gray-500">{item.desc}</div>
-                                </div>
-                                <ChevronRight size={18} className="text-gray-300 group-hover:text-[#1A7850] group-hover:translate-x-1 transition-all" />
-                            </button>
-                        );
-                    })}
-                </div>
-
-                <button
-                    onClick={handleLogout}
-                    disabled={loading}
-                    className="w-full mt-6 flex items-center justify-center gap-2 py-3.5 bg-white border border-red-100 text-red-600 font-bold rounded-xl active:scale-95 transition-all shadow-sm hover:bg-red-50 disabled:opacity-50"
-                >
-                    <LogOut size={18} />
-                    {loading ? 'Logging out...' : 'Log Out securely'}
-                </button>
-            </div>
+            )}
         </div>
     );
 }

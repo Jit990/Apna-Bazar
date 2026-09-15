@@ -67,8 +67,8 @@ export function CategoryForm({ initialData }: CategoryFormProps) {
             }
 
             router.push('/admin/categories');
-        } catch (error: any) {
-            toast.error(error.message || 'Failed to save category');
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'Failed to save category');
         } finally {
             setLoading(false);
         }

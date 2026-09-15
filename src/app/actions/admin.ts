@@ -101,7 +101,24 @@ export async function deleteCategory(id: string) {
 // Products CRUD
 // ----------------------------------------------------------------------
 
-export async function createProduct(data: any, primary_image_url?: string) {
+interface AdminProductPayload {
+    name: string;
+    slug: string;
+    sku: string;
+    category_id: string;
+    price: number;
+    mrp: number;
+    cost_price?: number;
+    discount_percent?: number;
+    stock_quantity: number;
+    low_stock_threshold: number;
+    description?: string;
+    is_active: boolean;
+    stock_status?: string;
+    [key: string]: string | number | boolean | undefined;
+}
+
+export async function createProduct(data: AdminProductPayload, primary_image_url?: string) {
     await requireAdmin();
     const admin = await createAdminClient();
 
@@ -134,7 +151,7 @@ export async function createProduct(data: any, primary_image_url?: string) {
     return { success: true };
 }
 
-export async function updateProduct(id: string, data: any, primary_image_url?: string) {
+export async function updateProduct(id: string, data: AdminProductPayload, primary_image_url?: string) {
     await requireAdmin();
     const admin = await createAdminClient();
 

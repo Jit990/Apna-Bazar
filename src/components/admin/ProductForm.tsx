@@ -6,14 +6,35 @@ import { createClient } from '@/lib/supabase/client';
 import { createProduct, updateProduct } from '@/app/actions/admin';
 import { toast } from 'sonner';
 
+interface ProductInitialData {
+    id: string;
+    name: string;
+    slug: string;
+    sku: string;
+    category_id: string;
+    price: number;
+    mrp: number;
+    cost_price?: number;
+    discount_percent: number;
+    stock_quantity: number;
+    low_stock_threshold: number;
+    description?: string;
+    is_active: boolean;
+}
+
+interface CategoryOption {
+    id: string;
+    name: string;
+}
+
 interface ProductFormProps {
-    initialData?: any;
+    initialData?: ProductInitialData;
 }
 
 export function ProductForm({ initialData }: ProductFormProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
-    const [categories, setCategories] = useState<any[]>([]);
+    const [categories, setCategories] = useState<CategoryOption[]>([]);
 
     const [imageUrl, setImageUrl] = useState('');
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -105,8 +126,8 @@ export function ProductForm({ initialData }: ProductFormProps) {
             }
 
             router.push('/admin/products');
-        } catch (error: any) {
-            toast.error(error.message || 'Failed to save product');
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'Failed to save product');
         } finally {
             setLoading(false);
         }

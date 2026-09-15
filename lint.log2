@@ -1,0 +1,272 @@
+﻿
+> apna-bazar@0.1.0 lint
+> eslint
+
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\android\app\build\intermediates\assets\debug\mergeDebugAssets\native-bridge.js
+    5:5   warning  'nativeBridge' is assigned a value but never used                                         @typescript-eslint/no-unused-vars
+   36:5   warning  Unused eslint-disable directive (no problems were reported)
+   96:24  warning  'ignored' is defined but never used                                                       @typescript-eslint/no-unused-vars
+  190:25  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  208:29  warning  Unused eslint-disable directive (no problems were reported from 'no-prototype-builtins')
+  296:17  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  302:17  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  306:17  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  310:17  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  365:24  warning  'e' is defined but never used                                                             @typescript-eslint/no-unused-vars
+  852:25  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  865:25  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  922:25  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  926:21  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  983:25  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+  990:21  warning  Expected an assignment or function call and instead saw an expression                     @typescript-eslint/no-unused-expressions
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\check-admin.js
+  2:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\(customer)\addresses\page.tsx
+   6:10  warning  'createClient' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  27:18  warning  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  35:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\(customer)\addresses\page.tsx:35:9
+  33 |
+  34 |     useEffect(() => {
+> 35 |         fetchAddresses();
+     |         ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  36 |     }, []);
+  37 |
+  38 |     const handleSubmit = async (e: React.FormEvent) => {  react-hooks/set-state-in-effect
+  47:33  error    Error: This value cannot be modified
+
+Modifying a value returned from 'useState()', which should not be modified directly. Use the setter function to update instead.
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\(customer)\addresses\page.tsx:47:33
+  45 |
+  46 |             // Auto layout state
+> 47 |             if (!payload.state) payload.state = 'West Bengal';
+     |                                 ^^^^^^^ `formData` cannot be modified
+  48 |
+  49 |             const res = await fetch('/api/addresses', {
+  50 |                 method,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/immutability
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\(customer)\layout.tsx
+  6:10  warning  'useCart' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\(customer)\orders\page.tsx
+   65:85  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  119:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  150:70  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\(customer)\page.tsx
+  3:44  warning  'Grid3X3' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\actions\admin.ts
+  104:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  137:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\actions\cart.ts
+  39:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\admin\categories\DeleteCategoryButton.tsx
+  18:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\admin\categories\page.tsx
+   1:33  warning  'Trash' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  46:45  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\admin\layout.tsx
+   1:10  warning  'redirect' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  13:11  warning  'pathname' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  24:20  error    Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\admin\layout.tsx:24:20
+  22 |         if (!user) {
+  23 |             // If no user, just render children (login page will be shown by middleware redirect)
+> 24 |             return <>{children}</>;
+     |                    ^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  25 |         }
+  26 |
+  27 |         // Verify admin role                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/error-boundaries
+  36:20  error    Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\admin\layout.tsx:36:20
+  34 |         if (!profile || !['admin', 'manager', 'staff'].includes(profile.role) || !profile.is_active) {
+  35 |             // Non-admin user ΓÇö just render children (login page or unauthorized)
+> 36 |             return <>{children}</>;
+     |                    ^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  37 |         }
+  38 |
+  39 |         return (                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/error-boundaries
+  40:13  error    Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\admin\layout.tsx:40:13
+  38 |
+  39 |         return (
+> 40 |             <div className="admin-shell flex h-screen overflow-hidden selection:bg-emerald-200 selection:text-emerald-950">
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |                 <div className="admin-shell-glow fixed inset-0 pointer-events-none z-0" />
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |                 <AdminSidebar userRole={profile.role} userName={profile.full_name} />
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |                 <main className="flex-1 overflow-auto ml-0 lg:ml-64 relative z-10 scrollbar-thin">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |                     <div className="admin-content p-4 sm:p-6 lg:p-8">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |                         {children}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |                     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |                 </main>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |             </div>
+     | ^^^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  49 |         );
+  50 |     } catch {
+  51 |         // Auth error ΓÇö render children as-is (login page)  react-hooks/error-boundaries
+  41:17  error    Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\admin\layout.tsx:41:17
+  39 |         return (
+  40 |             <div className="admin-shell flex h-screen overflow-hidden selection:bg-emerald-200 selection:text-emerald-950">
+> 41 |                 <div className="admin-shell-glow fixed inset-0 pointer-events-none z-0" />
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  42 |                 <AdminSidebar userRole={profile.role} userName={profile.full_name} />
+  43 |                 <main className="flex-1 overflow-auto ml-0 lg:ml-64 relative z-10 scrollbar-thin">
+  44 |                     <div className="admin-content p-4 sm:p-6 lg:p-8">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-hooks/error-boundaries
+  42:17  error    Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\admin\layout.tsx:42:17
+  40 |             <div className="admin-shell flex h-screen overflow-hidden selection:bg-emerald-200 selection:text-emerald-950">
+  41 |                 <div className="admin-shell-glow fixed inset-0 pointer-events-none z-0" />
+> 42 |                 <AdminSidebar userRole={profile.role} userName={profile.full_name} />
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  43 |                 <main className="flex-1 overflow-auto ml-0 lg:ml-64 relative z-10 scrollbar-thin">
+  44 |                     <div className="admin-content p-4 sm:p-6 lg:p-8">
+  45 |                         {children}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/error-boundaries
+  43:17  error    Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\admin\layout.tsx:43:17
+  41 |                 <div className="admin-shell-glow fixed inset-0 pointer-events-none z-0" />
+  42 |                 <AdminSidebar userRole={profile.role} userName={profile.full_name} />
+> 43 |                 <main className="flex-1 overflow-auto ml-0 lg:ml-64 relative z-10 scrollbar-thin">
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |                     <div className="admin-content p-4 sm:p-6 lg:p-8">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |                         {children}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |                     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |                 </main>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  48 |             </div>
+  49 |         );
+  50 |     } catch {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-hooks/error-boundaries
+  44:21  error    Error: Avoid constructing JSX within try/catch
+
+React does not immediately render components when JSX is rendered, so any errors from this component will not be caught by the try/catch. To catch errors in rendering a given component, wrap that component in an error boundary. (https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\admin\layout.tsx:44:21
+  42 |                 <AdminSidebar userRole={profile.role} userName={profile.full_name} />
+  43 |                 <main className="flex-1 overflow-auto ml-0 lg:ml-64 relative z-10 scrollbar-thin">
+> 44 |                     <div className="admin-content p-4 sm:p-6 lg:p-8">
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 45 |                         {children}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |                     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Avoid constructing JSX within try/catch
+  47 |                 </main>
+  48 |             </div>
+  49 |         );                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/error-boundaries
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\admin\products\DeleteProductButton.tsx
+  18:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\layout.tsx
+   7:7  warning  'inter' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  13:7  warning  'baloo2' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\app\privacy\page.tsx
+  9:33  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  9:36  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  9:39  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  9:43  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  9:46  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  9:49  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\components\admin\CategoryForm.tsx
+   28:22  warning  'setImageUrl' is assigned a value but never used                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   70:25  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  116:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\components\admin\ProductForm.tsx
+   10:19  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   16:50  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  108:25  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  149:33  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\components\product\ProductCard.tsx
+  36:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\components\product\ProductCard.tsx:36:9
+  34 |
+  35 |     useEffect(() => {
+> 36 |         setQuantity(cart.getItemQuantity(product.id));
+     |         ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  37 |     }, [cart, product.id]);
+  38 |
+  39 |     const handleAdd = () => {  react-hooks/set-state-in-effect
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\context\CartContext.tsx
+   24:24  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-explicit-any
+   72:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\context\CartContext.tsx:72:13
+  70 |
+  71 |         if (!hasSupabaseConfig) {
+> 72 |             setItems(loadLocalCart());
+     |             ^^^^^^^^ Avoid calling setState() directly within an effect
+  73 |             setLoaded(true);
+  74 |             return () => {
+  75 |                 mounted = false;  react-hooks/set-state-in-effect
+   92:57  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-explicit-any
+  125:84  warning  'session' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+
+C:\Users\CROMA\Desktop\new project\apna-bazar\src\services\otp.service.ts
+  189:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  200:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Γ£û 65 problems (35 errors, 30 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+

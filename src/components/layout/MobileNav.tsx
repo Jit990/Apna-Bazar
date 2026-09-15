@@ -2,48 +2,45 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Grid3X3, Search, ShoppingBag, User } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useCart } from '@/context/CartContext';
+import { Home, Grid3X3, Search, ClipboardList, User } from 'lucide-react';
+
+const navItems = [
+    { href: '/', label: 'Home', icon: Home },
+    { href: '/categories', label: 'Categories', icon: Grid3X3 },
+    { href: '/search', label: 'Search', icon: Search },
+    { href: '/orders', label: 'Orders', icon: ClipboardList },
+    { href: '/account', label: 'Account', icon: User },
+];
 
 export function MobileNav() {
     const pathname = usePathname();
-    const { itemCount } = useCart(); // Use real context
-
-    const navItems = [
-        { label: 'Home', href: '/', icon: Home },
-        { label: 'Categories', href: '/categories', icon: Grid3X3 },
-        { label: 'Search', href: '/search', icon: Search },
-        { label: 'Cart', href: '/cart', icon: ShoppingBag, isCart: true },
-        { label: 'Account', href: '/account', icon: User },
-    ];
 
     return (
-        <nav className="customer-mobile-nav fixed bottom-0 left-0 right-0 lg:hidden pb-safe z-50">
-            <div className="flex justify-around items-center h-14">
-                {navItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+        <nav className="mobile-nav lg:hidden">
+            <div className="flex items-stretch justify-around">
+                {navItems.map(({ href, label, icon: Icon }) => {
+                    const isActive =
+                        href === '/'
+                            ? pathname === '/'
+                            : pathname.startsWith(href);
 
                     return (
                         <Link
-                            key={item.href}
-                            href={item.href}
-                            className={cn(
-                                'flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors relative',
-                                isActive ? 'text-emerald-700' : 'text-slate-400 hover:text-slate-600'
-                            )}
+                            key={href}
+                            href={href}
+                            className={`mobile-nav-item flex-1 ${isActive ? 'active' : ''}`}
                         >
-                            <div className="relative">
-                                <Icon size={22} strokeWidth={isActive ? 2.5 : 2} className={cn(isActive && "fill-[#1A7850]/10")} />
-                                {item.isCart && itemCount > 0 && (
-                                    <span className="absolute -top-1.5 -right-2 h-[18px] min-w-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 border-2 border-white shadow-sm">
-                                        {itemCount > 99 ? '99+' : itemCount}
-                                    </span>
-                                )}
+                            <div className={`relative flex items-center justify-center transition-all duration-200 ${isActive ? '' : ''}`}>
+                                <div className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 ${isActive ? 'bg-[var(--brand-primary)] shadow-sm' : ''}`}>
+                                    <Icon
+                                        size={18}
+                                        strokeWidth={isActive ? 2.5 : 1.8}
+                                        className={`transition-colors duration-200 ${isActive ? 'text-white' : 'text-gray-400'}`}
+                                    />
+                                </div>
                             </div>
-                            <span className={cn("text-[10px] font-medium leading-none", isActive && "font-bold text-emerald-700")}>
-                                {item.label}
+                            <span className={`text-[10px] mt-0.5 transition-colors duration-200 ${isActive ? 'font-bold text-[var(--brand-primary)]' : 'font-semibold text-gray-400'}`}>
+                                {label}
                             </span>
                         </Link>
                     );

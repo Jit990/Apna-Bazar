@@ -1,114 +1,191 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingBag, User, ChevronDown, Mic, MapPin, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import {
+    Search, MapPin, ShoppingCart, User, Tag, ChevronDown, Zap,
+} from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
 export function Header() {
     const router = useRouter();
-    const { itemCount } = useCart();
-    // Default mock data tailored to typical Qcommerce metrics pending backend configuration
-    const deliveryLocation = 'Floor Ground, Bajkul 721655';
+    const { items } = useCart();
+    const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchOpen, setSearchOpen] = useState(false);
+    const searchRef = useRef<HTMLInputElement>(null);
 
-    const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        const fd = new FormData(e.currentTarget);
-        const q = fd.get('q');
-        if (q) {
-            router.push(`/search?q=${encodeURIComponent(q.toString())}`);
+        if (searchQuery.trim().length > 1) {
+            router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+            setSearchOpen(false);
         }
     };
 
+    useEffect(() => {
+        if (searchOpen && searchRef.current) {
+            searchRef.current.focus();
+        }
+    }, [searchOpen]);
+
     return (
-        <header className="customer-header sticky top-0 z-40 pb-4">
-            {/* Top Row: Logo, ETA, Account */}
-            <div className="flex items-start justify-between px-4 pt-3 pb-2">
-                <div className="flex flex-col gap-1">
-                    {/* Fake Logo equivalent to the screenshot */}
-                    <div className="flex items-center gap-1.5">
-                        <div className="brand-mark">
-                            <ShoppingBag size={19} className="fill-white stroke-white" />
-                        </div>
-                        <h1 className="font-brand font-black text-xl tracking-tight leading-none flex gap-1">
-                            <span className="text-emerald-950">Apna</span>
-                            <span className="text-orange-500">Bazar</span>
-                        </h1>
+        <header className="sticky top-0 z-50 bg-white" style={{ boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+            {/* Top bar – Blinkit-style delivery promise */}
+            <div className="bg-[#0D6B3D]">
+                <div className="container-app">
+                    <div className="flex items-center justify-center gap-2 py-1.5">
+                        <Zap size={12} className="text-[#F8E71C]" />
+                        <span className="text-[11px] font-semibold text-white tracking-wide">
+                            Order now & get delivery in <span className="text-[#F8E71C] font-bold">10 minutes</span>
+                        </span>
+                        <Zap size={12} className="text-[#F8E71C]" />
                     </div>
-                    {/* Time & Surge Badges */}
-                    <div className="flex items-center gap-2 mt-1.5">
-                        <h2 className="font-black text-2xl tracking-tighter text-slate-950 leading-none">18 min</h2>
-                        <div className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full flex items-center gap-1 border border-emerald-200">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span className="text-[9px] font-black uppercase tracking-wider">Live delivery</span>
-                        </div>
-                    </div>
-
-                    {/* Location Selector (matches the screenshot placement) */}
-                    <button className="flex items-center gap-1 mt-1 hover:opacity-80 active:opacity-60 transition-opacity">
-                        <MapPin size={13} className="text-orange-500" />
-                        <span className="text-[11px] font-bold text-slate-800 uppercase">HOME</span>
-                        <span className="text-[11px] text-slate-500">· {deliveryLocation}</span>
-                        <ChevronDown size={14} className="text-gray-500" />
-                    </button>
-                </div>
-
-                {/* Profile / Wallet Actions */}
-                <div className="flex items-center gap-3">
-                    {/* Fake Wallet */}
-                    <Link href="/account" className="hidden sm:flex items-center gap-1 bg-amber-50 border border-amber-200 px-2.5 py-1.5 rounded-full hover:bg-amber-100 transition-colors">
-                        <Sparkles size={12} className="text-amber-500" />
-                        <span className="text-amber-700 text-[10px] font-black tracking-tight">₹0 credits</span>
-                    </Link>
-                    {/* Profile Icon */}
-                    <Link href="/account" className="w-10 h-10 bg-white/80 rounded-full flex items-center justify-center hover:bg-white transition-colors border border-white shadow-sm">
-                        <User size={19} className="text-emerald-900" />
-                    </Link>
                 </div>
             </div>
 
-            {/* Desktop Wrapper (Hidden on mobile entirely as we built a dedicated mobile first layout) */}
-            <div className="px-4 lg:hidden">
-                <form onSubmit={handleSearch} className="relative mt-1">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                        <Search size={18} className="text-gray-900 stroke-[2.5]" />
-                    </div>
-                    <input
-                        name="q"
-                        type="search"
-                        placeholder='Search "kurkure, shampoo, milk..."'
-                        className="customer-search block w-full pl-10 pr-10 py-3.5 bg-white/95 border border-white rounded-2xl text-sm font-medium outline-none placeholder-slate-400 focus:ring-2 focus:ring-orange-200 focus:border-orange-300 shadow-[0_8px_24px_rgba(15,23,42,0.08)]"
-                    />
-                    <button type="button" className="absolute inset-y-0 right-0 pr-3 flex items-center group">
-                        <div className="bg-gray-50 p-1.5 rounded-full border border-gray-200 group-hover:bg-gray-100 transition-colors">
-                            <Mic size={14} className="text-gray-600" />
+            {/* Desktop Header */}
+            <div className="hidden lg:block border-b border-[var(--border-light)]">
+                <div className="container-app">
+                    <div className="flex items-center gap-5 h-[66px]">
+                        {/* Logo */}
+                        <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
+                            <div className="brand-mark">
+                                <ShoppingCart size={18} className="text-white" />
+                            </div>
+                            <div>
+                                <span className="text-[22px] font-extrabold tracking-tight" style={{ fontFamily: 'var(--font-brand)', color: 'var(--brand-primary)' }}>
+                                    apna<span className="text-[#F8E71C] bg-[#0D6B3D] px-1.5 py-0.5 rounded-md ml-0.5">bazar</span>
+                                </span>
+                            </div>
+                        </Link>
+
+                        {/* Delivery info */}
+                        <button className="flex items-center gap-2 px-3.5 py-2 rounded-xl hover:bg-gray-50 transition group flex-shrink-0 border border-transparent hover:border-[var(--border-light)]">
+                            <div className="w-8 h-8 rounded-lg bg-[var(--brand-primary-light)] flex items-center justify-center">
+                                <MapPin size={16} className="text-[var(--brand-primary)]" />
+                            </div>
+                            <div className="text-left">
+                                <p className="text-[10px] font-semibold text-gray-400 leading-none uppercase tracking-wider">Deliver to</p>
+                                <p className="text-sm font-bold text-gray-800 leading-tight flex items-center gap-1">
+                                    Bhubaneswar, 751001
+                                    <ChevronDown size={12} className="text-gray-400" />
+                                </p>
+                            </div>
+                        </button>
+
+                        {/* Search */}
+                        <form onSubmit={handleSearch} className="flex-1 max-w-xl">
+                            <div className="relative">
+                                <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <input
+                                    type="text"
+                                    placeholder='Search "milk, bread, eggs, fruits..."'
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-full bg-[#F4F5F7] rounded-xl pl-11 pr-4 py-2.5 text-sm font-medium placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:bg-white transition-all border border-[#E5E7EB] focus:border-[var(--brand-primary)]/30"
+                                />
+                            </div>
+                        </form>
+
+                        {/* Right Actions */}
+                        <div className="flex items-center gap-1">
+                            <Link
+                                href="/categories"
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:bg-[var(--brand-primary-light)] hover:text-[var(--brand-primary)] transition"
+                            >
+                                <Tag size={15} />
+                                Offers
+                            </Link>
+                            <Link
+                                href="/account"
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:bg-[var(--brand-primary-light)] hover:text-[var(--brand-primary)] transition"
+                            >
+                                <User size={15} />
+                                Account
+                            </Link>
+                            <Link
+                                href="/cart"
+                                className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-[var(--brand-primary)] text-white hover:bg-[var(--brand-primary-dark)] transition ml-1 active:scale-[0.97]"
+                                style={{ boxShadow: '0 3px 12px rgba(13,107,61,0.3)' }}
+                            >
+                                <ShoppingCart size={16} />
+                                Cart
+                                {itemCount > 0 && (
+                                    <span className="absolute -top-1.5 -right-1.5 h-5 min-w-5 flex items-center justify-center rounded-full bg-[#F8E71C] text-[#1B1B1E] text-[10px] font-extrabold px-1.5 shadow-md animate-bounce-in">
+                                        {itemCount}
+                                    </span>
+                                )}
+                            </Link>
                         </div>
-                    </button>
-                </form>
+                    </div>
+                </div>
             </div>
 
-            {/* Desktop Fallback */}
-            <div className="hidden lg:flex items-center justify-between px-8 pt-4 pb-2">
-                <div className="flex items-center gap-2">
-                    <h1 className="font-brand font-black text-3xl tracking-tight leading-none flex gap-1">
-                        <span className="text-[#1A7850]">Apna</span>
-                        <span className="text-orange-500">Bazar</span>
-                    </h1>
-                </div>
-                <form onSubmit={handleSearch} className="relative w-[500px]">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                        <Search size={18} className="text-gray-900 stroke-[2.5]" />
+            {/* Mobile Header */}
+            <div className="lg:hidden">
+                <div className="px-4 py-2.5">
+                    {/* Top row: logo + delivery + cart */}
+                    <div className="flex items-center justify-between mb-2">
+                        <Link href="/" className="flex items-center gap-2">
+                            <div className="brand-mark" style={{ width: 34, height: 34 }}>
+                                <ShoppingCart size={14} className="text-white" />
+                            </div>
+                            <div>
+                                <span className="text-base font-extrabold" style={{ fontFamily: 'var(--font-brand)', color: 'var(--brand-primary)' }}>
+                                    apna<span className="text-[#F8E71C] bg-[#0D6B3D] px-1 py-0.5 rounded-md ml-0.5 text-sm">bazar</span>
+                                </span>
+                            </div>
+                        </Link>
+
+                        <div className="flex items-center gap-2">
+                            <Link
+                                href="/account"
+                                className="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition"
+                            >
+                                <User size={17} />
+                            </Link>
+                            <Link
+                                href="/cart"
+                                className="relative w-9 h-9 rounded-xl bg-[var(--brand-primary)] flex items-center justify-center text-white active:scale-95 transition"
+                                style={{ boxShadow: '0 2px 8px rgba(13,107,61,0.3)' }}
+                            >
+                                <ShoppingCart size={17} />
+                                {itemCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 h-[18px] min-w-[18px] flex items-center justify-center rounded-full bg-[#F8E71C] text-[#1B1B1E] text-[9px] font-extrabold px-1 shadow-sm animate-bounce-in">
+                                        {itemCount}
+                                    </span>
+                                )}
+                            </Link>
+                        </div>
                     </div>
-                    <input name="q" type="search" placeholder='Search "kurkure, shampoo, milk..."' className="block w-full pl-10 pr-10 py-3.5 bg-white border border-gray-200 rounded-2xl text-sm font-medium outline-none placeholder-gray-400 focus:border-gray-300 shadow-sm" />
-                </form>
-                <div className="flex items-center gap-6">
-                    <Link href="/cart" className="relative p-2 rounded-xl hover:bg-white/60">
-                        <ShoppingBag size={24} className="text-emerald-900" />
-                        {itemCount > 0 && <span className="absolute -top-1.5 -right-2 h-5 min-w-[20px] bg-red-500 text-white text-[10px] items-center justify-center rounded-full flex font-bold">{itemCount > 99 ? '99+' : itemCount}</span>}
-                    </Link>
-                    <Link href="/account" className="p-2 rounded-xl hover:bg-white/60">
-                        <User size={24} className="text-emerald-900" />
-                    </Link>
+
+                    {/* Delivery row */}
+                    <button className="flex items-center gap-1.5 mb-2 text-left w-full">
+                        <div className="w-6 h-6 rounded-md bg-[var(--brand-primary-light)] flex items-center justify-center flex-shrink-0">
+                            <MapPin size={12} className="text-[var(--brand-primary)]" />
+                        </div>
+                        <span className="text-[11px] text-gray-500 font-medium">Deliver to ·</span>
+                        <span className="text-[11px] font-bold text-gray-800">Bhubaneswar, 751001</span>
+                        <span className="text-[11px] text-[var(--brand-primary)] font-bold ml-auto">Change</span>
+                    </button>
+
+                    {/* Search */}
+                    <form onSubmit={handleSearch}>
+                        <div className="relative">
+                            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <input
+                                ref={searchRef}
+                                type="text"
+                                placeholder='Search "milk, bread, eggs..."'
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onFocus={() => setSearchOpen(true)}
+                                className="w-full bg-[#F4F5F7] rounded-xl pl-9 pr-4 py-2.5 text-[13px] font-medium placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:bg-white transition-all border border-[#E5E7EB] focus:border-[var(--brand-primary)]/30"
+                            />
+                        </div>
+                    </form>
                 </div>
             </div>
         </header>

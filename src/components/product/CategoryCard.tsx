@@ -1,77 +1,85 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
-import { cn } from '@/lib/utils';
+import Link from 'next/link';
 import type { Category } from '@/types';
-import {
-    Gem, ScanFace, SprayCan, Sparkles, Droplets, Scissors,
-    Gift, ToyBrick, PenTool, ShoppingBasket,
-    Package, Heart
-} from 'lucide-react';
+import { useState } from 'react';
+
+const pastels = [
+    '#E8F5EE', '#FFFDE7', '#FFF3E0', '#FCE4EC',
+    '#E3F2FD', '#F3E5F5', '#E0F2F1', '#FFEBEE',
+    '#F1F8E9', '#E8EAF6',
+];
+
+const categoryEmojis: Record<string, string> = {
+    'fruits': '🍎',
+    'vegetables': '🥬',
+    'fruits & vegetables': '🥗',
+    'dairy': '🥛',
+    'dairy & eggs': '🥚',
+    'atta': '🌾',
+    'rice': '🍚',
+    'atta, rice & dal': '🌾',
+    'oil': '🫒',
+    'oil & ghee': '🫒',
+    'masala': '🌶️',
+    'masala & spices': '🌶️',
+    'spices': '🧂',
+    'snacks': '🍿',
+    'snacks & beverages': '🥤',
+    'beverages': '☕',
+    'personal care': '🧴',
+    'home care': '🧹',
+    'baby care': '👶',
+    'pet care': '🐾',
+    'bakery': '🍞',
+    'frozen': '🧊',
+    'chocolates': '🍫',
+};
+
+function getCategoryEmoji(name: string): string {
+    const lower = name.toLowerCase();
+    for (const [key, emoji] of Object.entries(categoryEmojis)) {
+        if (lower.includes(key)) return emoji;
+    }
+    return '🛒';
+}
 
 interface CategoryCardProps {
     category: Category;
-    className?: string;
+    size?: 'sm' | 'md' | 'lg';
 }
 
-export function CategoryCard({ category, className }: CategoryCardProps) {
+export function CategoryCard({ category, size = 'md' }: CategoryCardProps) {
+    const [imgError, setImgError] = useState(false);
+    const bgColor = pastels[Math.abs(category.name.charCodeAt(0) + category.name.length) % pastels.length];
+    const emoji = getCategoryEmoji(category.name);
+
     return (
         <Link
             href={`/categories/${category.slug}`}
-            className={cn(
-                'flex flex-col items-center gap-2 py-3 px-1 rounded-2xl transition-all duration-200 hover:-translate-y-1 active:scale-95 group',
-                className
-            )}
-            aria-label={`Browse ${category.name}`}
+            className="group flex flex-col items-center gap-2 text-center"
         >
-            {/* Icon container */}
-            <div className="category-icon w-16 h-16 rounded-2xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-center overflow-hidden shadow-sm group-hover:bg-emerald-100 transition-colors">
-                {category.image_url ? (
+            <div
+                className="relative w-full aspect-square rounded-2xl flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:shadow-md group-hover:scale-[1.05] border border-white/60"
+                style={{ background: bgColor }}
+            >
+                {category.image_url && !imgError ? (
                     <Image
                         src={category.image_url}
                         alt={category.name}
-                        width={56}
-                        height={56}
-                        className="object-cover w-full h-full rounded-xl"
+                        fill
+                        sizes="(max-width: 640px) 33vw, 16vw"
+                        className="object-contain p-3 transition-transform duration-300 group-hover:scale-110"
+                        onError={() => setImgError(true)}
                     />
                 ) : (
-                    <CategoryFallbackIcon name={category.name} />
+                    <span className="text-3xl md:text-4xl drop-shadow-sm">{emoji}</span>
                 )}
             </div>
-            {/* Label */}
-            <span className="text-[11px] font-semibold text-center text-gray-700 leading-tight w-full line-clamp-2 px-1">
+            <span className="text-[11px] sm:text-xs font-bold text-gray-700 leading-tight line-clamp-2 group-hover:text-[var(--brand-primary)] transition-colors">
                 {category.name}
             </span>
         </Link>
-    );
-}
-
-function CategoryFallbackIcon({ name }: { name: string }) {
-    const n = name.toLowerCase();
-
-    let Icon = Package;
-    if (n.includes('jewelry') || n.includes('ring') || n.includes('earring') || n.includes('bangle')) Icon = Gem;
-    else if (n.includes('makeup') || n.includes('cosmetic')) Icon = ScanFace;
-    else if (n.includes('skin')) Icon = Droplets;
-    else if (n.includes('hair')) Icon = Scissors;
-    else if (n.includes('perfume') || n.includes('fragrance')) Icon = SprayCan;
-    else if (n.includes('gift')) Icon = Gift;
-    else if (n.includes('toy')) Icon = ToyBrick;
-    else if (n.includes('stationery') || n.includes('pen')) Icon = PenTool;
-    else if (n.includes('food') || n.includes('grocery')) Icon = ShoppingBasket;
-    else if (n.includes('beauty')) Icon = Sparkles;
-    else if (n.includes('personal') || n.includes('care')) Icon = Heart;
-
-    return <Icon size={24} strokeWidth={1.5} className="text-primary opacity-80" />;
-}
-
-// Skeleton
-export function CategoryCardSkeleton() {
-    return (
-        <div className="flex flex-col items-center gap-2 p-3">
-            <div className="skeleton w-16 h-16 rounded-2xl" />
-            <div className="skeleton h-3 w-12 rounded" />
-        </div>
     );
 }

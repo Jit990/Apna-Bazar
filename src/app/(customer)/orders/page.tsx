@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Package, Clock, CheckCircle2, Truck, XCircle, ShoppingBag, Loader2, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Package, Clock, CheckCircle2, Truck, XCircle, ShoppingBag, Loader2, ChevronRight, type LucideIcon } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { formatPrice, formatDateTime } from '@/lib/utils';
-import type { Order } from '@/types';
+import type { Order, OrderItem } from '@/types';
 
 export default function OrdersPage() {
     const router = useRouter();
@@ -62,7 +62,7 @@ export default function OrdersPage() {
     }, [router]);
 
     const getStatusInfo = (status: string) => {
-        const map: Record<string, { label: string, color: string, bg: string, icon: any, desc: string }> = {
+        const map: Record<string, { label: string, color: string, bg: string, icon: LucideIcon, desc: string }> = {
             pending: { label: 'Order Placed', color: 'text-yellow-600', bg: 'bg-yellow-50', icon: Clock, desc: 'Waiting for confirmation' },
             confirmed: { label: 'Confirmed', color: 'text-blue-600', bg: 'bg-blue-50', icon: CheckCircle2, desc: 'Store is processing your order' },
             preparing: { label: 'Preparing', color: 'text-purple-600', bg: 'bg-purple-50', icon: Package, desc: 'Packing your items' },
@@ -116,7 +116,7 @@ export default function OrdersPage() {
                             const StatusIcon = status.icon;
 
                             // Get first 3 items safely
-                            const items = (order as any).items || [];
+                            const items: OrderItem[] = (order as Order & { items: OrderItem[] }).items || [];
                             const previewItems = items.slice(0, 3);
                             const moreCount = items.length - 3;
 
@@ -147,7 +147,7 @@ export default function OrdersPage() {
                                         </div>
 
                                         <div className="flex flex-wrap items-center gap-2 mt-2">
-                                            {previewItems.map((item: any, idx: number) => (
+                                            {previewItems.map((item: OrderItem, idx: number) => (
                                                 <div key={idx} className="bg-gray-50 border border-gray-100 px-2 py-1 rounded text-[11px] font-medium text-gray-700 flex items-center gap-1 max-w-[150px] truncate">
                                                     <span className="text-[#1A7850] font-bold">{item.quantity}x</span>
                                                     {item.product?.name || 'Item'}
